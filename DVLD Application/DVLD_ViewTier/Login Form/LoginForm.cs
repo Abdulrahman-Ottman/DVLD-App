@@ -5,9 +5,9 @@ using DVLD_BusinessTier;
 
 namespace DVLD_ViewTier
 {
-    public partial class Login : Form
+    public partial class LoginForm : Form
     {
-        public Login()
+        public LoginForm()
         {
             InitializeComponent();
             btnClose.FlatAppearance.BorderSize = 0; // Remove border
@@ -30,11 +30,12 @@ namespace DVLD_ViewTier
             string password = tbPassword.Text;
             if (LoginController.AttempLogin(userName, password))
             {
-                MessageBox.Show("Loged In");
+                    this.DialogResult = DialogResult.OK; // Sets the result to OK  
+                    this.Close(); // Closes the login form  
             }
             else
             {
-                MessageBox.Show("falid to Loged In");
+                MessageBox.Show("Error : Faild to login");
             }
         }
     }
