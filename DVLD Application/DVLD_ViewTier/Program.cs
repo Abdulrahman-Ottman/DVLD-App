@@ -16,7 +16,21 @@ namespace DVLD_ViewTier
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Login());
+
+            using (LoginForm loginForm = new LoginForm())
+            {
+                // Show the login form as a dialog  
+                if (loginForm.ShowDialog() == DialogResult.OK) // Assuming OK is the result after a successful login  
+                {
+                    // After successful login, show the MainScreen  
+                    Application.Run(new MainScreen.MainScreen());
+                }
+                else
+                {
+                    // If login was not successful, exit the application or handle accordingly  
+                    Application.Exit();
+                }
+            }
         }
     }
 }
