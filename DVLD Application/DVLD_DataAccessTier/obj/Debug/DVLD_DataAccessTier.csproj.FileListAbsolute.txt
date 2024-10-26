@@ -1,0 +1,6 @@
+C:\Projects\DVLD APP\DVLD Application\DVLD_DataAccessTier\bin\Debug\DVLD_DataAccessTier.dll
+C:\Projects\DVLD APP\DVLD Application\DVLD_DataAccessTier\bin\Debug\DVLD_DataAccessTier.pdb
+C:\Projects\DVLD APP\DVLD Application\DVLD_DataAccessTier\obj\Debug\DVLD_DataAccessTier.csproj.AssemblyReference.cache
+C:\Projects\DVLD APP\DVLD Application\DVLD_DataAccessTier\obj\Debug\DVLD_DataAccessTier.csproj.CoreCompileInputs.cache
+C:\Projects\DVLD APP\DVLD Application\DVLD_DataAccessTier\obj\Debug\DVLD_DataAccessTier.dll
+C:\Projects\DVLD APP\DVLD Application\DVLD_DataAccessTier\obj\Debug\DVLD_DataAccessTier.pdb

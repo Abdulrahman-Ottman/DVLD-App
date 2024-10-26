@@ -1,7 +1,7 @@
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\DVLD_BusinessTier.dll
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\DVLD_BusinessTier.pdb
-C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\DVLD_DataAccess.dll
-C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\DVLD_DataAccess.pdb
+C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\DVLD_DataAccessTier.dll
+C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\DVLD_DataAccessTier.pdb
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_BusinessTier.csproj.AssemblyReference.cache
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_BusinessTier.csproj.CoreCompileInputs.cache
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_Bus.C375E8FF.Up2Date
