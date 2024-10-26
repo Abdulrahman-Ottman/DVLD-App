@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0A9B6A66-6BD9-4A00-9E9F-082262BBAF12}</ProjectGuid>
+    <ProjectGuid>{E2C55311-8576-4398-AD67-BF28F5C959A0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DVLD_BusinessTier</RootNamespace>
@@ -41,11 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoginController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DVLD_DataAccess\DVLD_DataAccessTier.csproj">
-      <Project>{1c6cdf68-60ee-4560-b196-84bc5fee50bb}</Project>
+    <ProjectReference Include="..\DVLD_DataAccessTier\DVLD_DataAccessTier.csproj">
+      <Project>{cdf2a2a3-e18c-4ad7-9a2b-545fd2c4befc}</Project>
       <Name>DVLD_DataAccessTier</Name>
     </ProjectReference>
   </ItemGroup>

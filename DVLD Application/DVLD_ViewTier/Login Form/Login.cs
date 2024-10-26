@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using DVLD_BusinessTier;
 
 namespace DVLD_ViewTier
 {
@@ -27,6 +22,20 @@ namespace DVLD_ViewTier
         private void Login_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            string userName = tbUserName.Text;
+            string password = tbPassword.Text;
+            if (LoginController.AttempLogin(userName, password))
+            {
+                MessageBox.Show("Loged In");
+            }
+            else
+            {
+                MessageBox.Show("falid to Loged In");
+            }
         }
     }
 }

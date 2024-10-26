@@ -81,12 +81,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DVLD_BusinessTier\DVLD_BusinessTier.csproj">
-      <Project>{0a9b6a66-6bd9-4a00-9e9f-082262bbaf12}</Project>
-      <Name>DVLD_BusinessTier</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="images\close.png" />
     <None Include="Resources\password.png" />
     <None Include="Resources\user.png" />
@@ -97,6 +91,12 @@
     <None Include="Resources\id.png" />
     <None Include="Resources\close %281%29.png" />
     <None Include="Resources\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DVLD_BusinessTier\DVLD_BusinessTier.csproj">
+      <Project>{e2c55311-8576-4398-ad67-bf28f5c959a0}</Project>
+      <Name>DVLD_BusinessTier</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
