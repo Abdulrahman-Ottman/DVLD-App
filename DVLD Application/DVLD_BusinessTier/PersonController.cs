@@ -38,5 +38,10 @@ namespace DVLD_BusinessTier
 
                 return clsPerson.AddNewPerson(person);
             }
+
+        public static DataTable GetPeopleBasedOnFilter(string filter, string value)
+        {
+            return clsPerson.GetPeopleBasedOnFilter(filter,value);
+        }
     }
 }

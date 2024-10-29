@@ -1,5 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
+using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using DVLD_BusinessTier;
 
@@ -9,6 +12,8 @@ namespace DVLD_ViewTier.People
     {
         DataTable peopleData = PersonController.GetAllPeople();
         static DataColumn[] keyColumns = new DataColumn[1];
+
+        Control currentFilterControl = null;
         public PeopleManagement()
         {
             InitializeComponent();
@@ -16,31 +21,21 @@ namespace DVLD_ViewTier.People
 
         private void LoadDataToGridView()
         {
-
-            keyColumns[0] = peopleData.Columns["Id"];
-            peopleData.PrimaryKey = keyColumns;
-            // Set up the DataGridView and bind the DataTable
             dgvViewPeople.DataSource = peopleData;
 
             dgvViewPeople.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            //// Optional: Customize the columns further if needed
             dgvViewPeople.Columns[0].Width = 30;  // Set checkbox column width
-            //dgvViewPeople.Columns[1].Width = 40;  // Set checkbox column width
-            //dgvViewPeople.Columns[3].DefaultCellStyle.Format = "dd/MM/yyyy"; // Format End Date
             dgvViewPeople.Columns[6].DefaultCellStyle.Format = "dd/MM/yyyy"; // Format Created At        }
 
-            //dgvViewPeople.Columns["ID"].DefaultCellStyle.ForeColor = Color.Black;
-            //dgvViewPeople.Columns["Title"].DefaultCellStyle.ForeColor = Color.Black;
-            //dgvViewPeople.Columns["Description"].DefaultCellStyle.ForeColor = Color.Black;
-            //dgvViewPeople.Columns["End Date"].DefaultCellStyle.ForeColor = Color.Black;
-            //dgvViewPeople.Columns["Created At"].DefaultCellStyle.ForeColor = Color.Black;
         }
 
         private void PeopleManagement_Load(object sender, System.EventArgs e)
         {
-            LoadDataToGridView();
             cmbFilters.SelectedIndex = 0;
+            keyColumns[0] = peopleData.Columns["Id"];
+            peopleData.PrimaryKey = keyColumns;
+            LoadDataToGridView();
         }
 
         private void btnAddNewPerson_Click(object sender, System.EventArgs e)
@@ -48,5 +43,142 @@ namespace DVLD_ViewTier.People
             AddPerson addPerson = new AddPerson();
             addPerson.ShowDialog();
         }
+
+        private void cmbFilters_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            if(currentFilterControl != null)
+            {
+                this.Controls.Remove(currentFilterControl);
+            }
+
+            Control inputControl = null;
+            string fieldName = cmbFilters.Text;
+
+            switch (fieldName)
+            {
+                case "None":
+                    break;
+                case "NationalNumber":
+                case "FirstName":
+                case "SecondName":
+                case "ThirdName":
+                case "LastName":
+                case "Address":
+                case "Phone":
+                case "Email":
+                    inputControl = new TextBox
+                    {
+                        Name = $"tb{fieldName}",
+                        Width = 150,
+                        Location = new Point(220, 193)
+                    };
+                    ((TextBox)inputControl).TextChanged += inputControl_TextChanged;
+                    break;
+
+                case "DateOfBirth":
+                    inputControl = new DateTimePicker
+                    {
+                        Name = "dtpDateOfBirth",
+                        Format = DateTimePickerFormat.Short,
+                        Width = 150,
+                        Location = new Point(220, 193)
+                    };
+                    ((DateTimePicker)inputControl).ValueChanged += inputControl_ValueChanged;
+                    break;
+
+                case "Gender":
+                    inputControl = new ComboBox
+                    {
+                        Name = "cmbGender",
+                        Width = 125,
+                        DropDownStyle = ComboBoxStyle.DropDownList,
+                        Location = new Point(220, 193)
+                    };
+                    ((ComboBox)inputControl).Items.AddRange(new[] { "Male", "Female"});
+                    ((ComboBox)inputControl).SelectedIndex = 0;
+                    ((ComboBox)inputControl).SelectedIndexChanged += inputControl_SelectedIndexChanged;
+
+                    break;
+
+                case "NationalityCountryID":
+                    inputControl = new ComboBox
+                    {
+                        Name = "cmbNationalityCountryID",
+                        Width = 150,
+                        DropDownStyle = ComboBoxStyle.DropDownList,
+                        Location = new Point(220, 193)
+                    };
+                    Dictionary<string, string> countries = CountryController.GetAllCountries();
+                    ((ComboBox)inputControl).DataSource = new BindingSource(countries, null);
+                    ((ComboBox)inputControl).DisplayMember = "Value";
+                    ((ComboBox)inputControl).ValueMember = "Key";
+                    ((ComboBox)inputControl).SelectedIndexChanged += inputControl_SelectedIndexChanged;
+                    break;
+
+                case "Created_by":
+                    inputControl = new TextBox
+                    {
+                        Name = "tbCreatedBy",
+                        Width = 150,
+                        Location = new Point(220, 193)
+                    };
+                    ((TextBox)inputControl).TextChanged += inputControl_TextChanged;
+                    break;
+
+                default:
+                    throw new ArgumentException($"Field '{fieldName}' is not supported.");
+            }
+            currentFilterControl = inputControl;
+
+            this.Controls.Add(inputControl);
+
+        }         
+        private void inputControl_TextChanged(object sender , EventArgs e)
+        {
+           switch (((TextBox)sender).Name)
+            {
+                case "tbNationalNumber":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("NationalNumber" , ((TextBox)sender).Text);
+                    break;
+                case "tbFirstName":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("FirstName", ((TextBox)sender).Text);
+                    break;
+                case "tbSecondName":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("SecondName", ((TextBox)sender).Text);
+                    break;
+                case "tbThirdName":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("ThirdName", ((TextBox)sender).Text);
+                    break;
+                case "tbLastName":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("LastName", ((TextBox)sender).Text);
+                    break;
+                case "tbAddress":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("Address", ((TextBox)sender).Text);
+                    break;
+                case "tbPhone":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("Phone", ((TextBox)sender).Text);
+                    break;
+                case "tbEmail":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("Email", ((TextBox)sender).Text);
+                    break;
+            }
+            LoadDataToGridView();
+            
+
+        }
+        private void inputControl_ValueChanged(object sender , EventArgs e)
+        {
+            if(sender is DateTimePicker date)
+            {
+                MessageBox.Show(date.ToString());
+            }
+        }
+        private void inputControl_SelectedIndexChanged(object sender , EventArgs e)
+        {
+            if(((ComboBox)sender).Name == "cmbNationalityCountryID")
+            {
+                MessageBox.Show(((ComboBox)sender).SelectedValue.ToString());
+            }
+        }
     }
-}
+    }

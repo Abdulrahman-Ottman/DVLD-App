@@ -77,12 +77,24 @@
             this.cmbFilters.Font = new System.Drawing.Font("Tahoma", 9F);
             this.cmbFilters.FormattingEnabled = true;
             this.cmbFilters.Items.AddRange(new object[] {
-            "Name",
-            "Gender"});
+            "None",
+            "Gender",
+            "NationalNumber",
+            "FirstName",
+            "SecondName",
+            "ThirdName",
+            "LastName",
+            "Address",
+            "Phone",
+            "Email",
+            "DateOfBirth",
+            "NationalityCountryID",
+            "Created_by"});
             this.cmbFilters.Location = new System.Drawing.Point(91, 193);
             this.cmbFilters.Name = "cmbFilters";
             this.cmbFilters.Size = new System.Drawing.Size(121, 22);
             this.cmbFilters.TabIndex = 5;
+            this.cmbFilters.SelectedIndexChanged += new System.EventHandler(this.cmbFilters_SelectedIndexChanged);
             // 
             // btnAddNewPerson
             // 

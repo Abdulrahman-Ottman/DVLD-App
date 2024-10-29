@@ -32,6 +32,86 @@ namespace DVLD_DataAccessTier
             SqlCommand command = new SqlCommand(query , clsSettings.connection);
             return clsHelpers.PeopleQueryCommandExecuter(command);
         }
+        public static DataTable GetPeopleBasedOnFilter(string filter , string value)
+        {
+            string query;
+            string parameterName = "None";
+
+            switch (filter)
+            {
+                case "None":
+                    query = "select * from People";
+                    break;
+
+                case "NationalNumber":
+                    query = "select * from People where NationalNo Like '%' + @NationalNumber + '%'";
+                    parameterName = "@NationalNumber";
+                    break;
+
+                case "FirstName":
+                    query = "select * from People where FirstName Like '%' + @FirstName + '%'";
+                    parameterName = "@FirstName";
+                    break;
+
+                case "SecondName":
+                    query = "select * from People where SecondName Like '%' + @SecondName + '%'";
+                    parameterName = "@SecondName";
+                    break;
+
+                case "ThirdName":
+                    query = "select * from People where ThirdName Like '%' + @ThirdName + '%'";
+                    parameterName = "@ThirdName";
+                    break;
+
+                case "LastName":
+                    query = "select * from People where LastName Like '%' + @LastName + '%'";
+                    parameterName = "@LastName";
+                    break;
+
+                case "DateOfBirth":
+                    query = "select * from People where DateOfBirth = @DateOfBirth";
+                    parameterName = "@DateOfBirth";
+                    break;
+
+                case "Gender":
+                    query = "select * from People where Gender = @Gender";
+                    parameterName = "@Gender";
+                    break;
+
+                case "Address":
+                    query = "select * from People where Address Like '%' + @Address + '%'";
+                    parameterName = "@Address";
+                    break;
+
+                case "Phone":
+                    query = "select * from People where Phone Like '%' + @Phone + '%'";
+                    parameterName = "@Phone";
+                    break;
+
+                case "Email":
+                    query = "select * from People where Email Like '%' + @Email + '%'";
+                    parameterName = "@Email";
+                    break;
+
+                case "NationalityCountryID":
+                    query = "select * from People where NationalityCountryID = @NationalityCountryID";
+                    parameterName = "@NationalityCountryID";
+                    break;
+
+                case "Created_by":
+                    query = "select * from People where Created_by = @Created_by";
+                    parameterName = "@Created_by";
+                    break;
+
+                default:
+                    query = "select * from People";
+                    break;
+            }
+            SqlCommand command = new SqlCommand(query , clsSettings.connection);
+            command.Parameters.AddWithValue(parameterName , value);
+            return clsHelpers.PeopleQueryCommandExecuter(command);
+
+        }
 
         public static bool AddNewPerson(clsPerson person)
         {
