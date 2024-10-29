@@ -1,0 +1,2 @@
+C:\Projects\DVLD APP\DVLD Application\Helpers\obj\Debug\Helpers.csproj.AssemblyReference.cache
+C:\Projects\DVLD APP\DVLD Application\Helpers\obj\Debug\Helpers.csproj.CoreCompileInputs.cache

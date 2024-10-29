@@ -12,8 +12,9 @@ namespace DVLD_DataAccessTier
         public bool IsActive { get; set; }
 
         public clsUser() { }
-        public clsUser(string userName, string password, bool isActive = true)
+        public clsUser(int userID , string userName, string password, bool isActive = true)
         {
+            UserId = userID;
             UserName = userName;
             Password = password;
             IsActive = isActive;
@@ -35,6 +36,7 @@ namespace DVLD_DataAccessTier
                     if (reader.Read())
                     {
                         auth = true;
+                        clsSettings.currentUser = new clsUser((int)reader["UserID"], reader["UserName"].ToString() , reader["Password"].ToString() , (bool)reader["IsActive"]);
                     }
 
                 }

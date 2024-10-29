@@ -16,5 +16,11 @@ namespace DVLD_ViewTier.MainScreen
         {
             InitializeComponent();
         }
+
+        private void tsmPeople_Click(object sender, EventArgs e)
+        {
+            People.PeopleManagement peopleManagement = new People.PeopleManagement();
+            peopleManagement.Show();
+        }
     }
 }

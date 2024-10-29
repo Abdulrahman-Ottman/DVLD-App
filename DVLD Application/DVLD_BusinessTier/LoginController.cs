@@ -8,7 +8,7 @@ namespace DVLD_BusinessTier
 
         public static bool AttempLogin(string username, string password)
         {
-            clsUser user = new clsUser(username, password);
+            clsUser user = new clsUser(-1,username, password);
             return clsUser.AttemptLogin(user);
         }
     }
