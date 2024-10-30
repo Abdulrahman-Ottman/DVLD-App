@@ -12,6 +12,8 @@ namespace DVLD_ViewTier
             InitializeComponent();
             btnClose.FlatAppearance.BorderSize = 0; // Remove border
             btnClose.TabStop = false; // Disable tab focus
+            tbUserName.Text = "Abdulrahman";
+            tbPassword.Text = "asdfasdf";
         }
 
         private void button1_Click(object sender, EventArgs e)
