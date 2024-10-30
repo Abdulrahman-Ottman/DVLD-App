@@ -108,7 +108,7 @@ namespace DVLD_DataAccessTier
                     break;
             }
             SqlCommand command = new SqlCommand(query , clsSettings.connection);
-            command.Parameters.AddWithValue(parameterName , value);
+            command.Parameters.AddWithValue(parameterName, value);
             return clsHelpers.PeopleQueryCommandExecuter(command);
 
         }

@@ -57,6 +57,8 @@ namespace DVLD_ViewTier.People
             switch (fieldName)
             {
                 case "None":
+                    peopleData = PersonController.GetAllPeople();
+                    LoadDataToGridView();
                     break;
                 case "NationalNumber":
                 case "FirstName":
@@ -94,7 +96,13 @@ namespace DVLD_ViewTier.People
                         DropDownStyle = ComboBoxStyle.DropDownList,
                         Location = new Point(220, 193)
                     };
-                    ((ComboBox)inputControl).Items.AddRange(new[] { "Male", "Female"});
+                    ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("Male", 1));
+                    ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("Female", 2));
+
+                    // Set the properties to display text and store value
+                    ((ComboBox)inputControl).DisplayMember = "Key";
+                    ((ComboBox)inputControl).ValueMember = "Value";
+
                     ((ComboBox)inputControl).SelectedIndex = 0;
                     ((ComboBox)inputControl).SelectedIndexChanged += inputControl_SelectedIndexChanged;
 
@@ -112,6 +120,7 @@ namespace DVLD_ViewTier.People
                     ((ComboBox)inputControl).DataSource = new BindingSource(countries, null);
                     ((ComboBox)inputControl).DisplayMember = "Value";
                     ((ComboBox)inputControl).ValueMember = "Key";
+
                     ((ComboBox)inputControl).SelectedIndexChanged += inputControl_SelectedIndexChanged;
                     break;
 
@@ -129,8 +138,15 @@ namespace DVLD_ViewTier.People
                     throw new ArgumentException($"Field '{fieldName}' is not supported.");
             }
             currentFilterControl = inputControl;
-
             this.Controls.Add(inputControl);
+            if (inputControl is DateTimePicker date)
+            {
+                inputControl_ValueChanged(date , new EventArgs());
+            } else if (inputControl is ComboBox combo)
+            {
+                inputControl_SelectedIndexChanged(combo , new EventArgs());
+            }
+
 
         }         
         private void inputControl_TextChanged(object sender , EventArgs e)
@@ -161,6 +177,9 @@ namespace DVLD_ViewTier.People
                 case "tbEmail":
                     peopleData = PersonController.GetPeopleBasedOnFilter("Email", ((TextBox)sender).Text);
                     break;
+                case "tbCreatedBy":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("Created_by", ((TextBox)sender).Text);
+                    break;
             }
             LoadDataToGridView();
             
@@ -168,17 +187,27 @@ namespace DVLD_ViewTier.People
         }
         private void inputControl_ValueChanged(object sender , EventArgs e)
         {
-            if(sender is DateTimePicker date)
+            if(sender is DateTimePicker date && date.Name == "dtpDateOfBirth")
             {
-                MessageBox.Show(date.ToString());
+                peopleData = PersonController.GetPeopleBasedOnFilter("DateOfBirth" , date.Value.ToString());
+                LoadDataToGridView();
             }
         }
         private void inputControl_SelectedIndexChanged(object sender , EventArgs e)
         {
-            if(((ComboBox)sender).Name == "cmbNationalityCountryID")
+            switch (((ComboBox)sender).Name)
             {
-                MessageBox.Show(((ComboBox)sender).SelectedValue.ToString());
+                case "cmbNationalityCountryID":
+                    peopleData = PersonController.GetPeopleBasedOnFilter("NationalityCountryID" , ((ComboBox)sender).SelectedValue.ToString());
+                    break;
+                case "cmbGender":
+                    if (((ComboBox)sender).SelectedItem is KeyValuePair<string, int> selectedGender)
+                    {
+                        peopleData = PersonController.GetPeopleBasedOnFilter("Gender", selectedGender.Value.ToString());
+                    }
+                    break;
             }
+            LoadDataToGridView();
         }
     }
     }
