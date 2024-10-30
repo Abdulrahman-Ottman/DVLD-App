@@ -13,7 +13,7 @@ namespace DVLD_BusinessTier
             return clsPerson.GetAllPeople();
         }
 
-        public static bool AddNewPerson(string nationalNumber, string firstName, string secondName,
+        public static int AddNewPerson(string nationalNumber, string firstName, string secondName,
                               string thirdName, string lastName, DateTime dateOfBirth, int gender,
                               string address, string phone, string email, string nationalityCountryID,
                               string imagePath, int createdBy)

@@ -15,6 +15,12 @@ namespace DVLD_ViewTier.People
     {
         private string imagePath = null;
 
+        public delegate void AddDataToDataTableEventHandler(int id ,string nationalID, string firstName, string secondName,
+                    string thirdName, string lastName, DateTime dateOfBirth,
+                    int gender, string address, string phone, string email,
+                    string nationalityCountryID, string imagePath, int createdBy);
+
+        public event AddDataToDataTableEventHandler DataCreated;
         public AddPerson()
         {
             InitializeComponent();
@@ -55,24 +61,29 @@ namespace DVLD_ViewTier.People
                 {
                     gender = 2;
                 }
-                bool added = PersonController.AddNewPerson(
-                     tbNationalID.Text,
-                     tbFirstName.Text,
-                     tbSecondName.Text,
-                     tbThirdName.Text,
-                     tbLastName.Text,
-                     dtpDateOfBirth.Value,
-                     gender,
-                     tbAddress.Text,
-                     tbPhone.Text,
-                     tbEmail.Text,
-                     cbCountry.SelectedValue.ToString(),
-                     imagePath,
-                     UserController.GetCurrentUserID()
-                     );
-                if (added)
+                string nationalID = tbNationalID.Text;
+                string firstName = tbFirstName.Text;
+                string secondName = tbSecondName.Text;
+                string thirdName = tbThirdName.Text;
+                string lastName = tbLastName.Text;
+                DateTime dateOfBirth = dtpDateOfBirth.Value;
+                string address = tbAddress.Text;
+                string phone = tbPhone.Text;
+                string email = tbEmail.Text;
+                string nationalityCountryID = cbCountry.SelectedValue.ToString();
+                int createdBy = UserController.GetCurrentUserID();
+
+                int id = PersonController.AddNewPerson(
+                                    nationalID, firstName, secondName, thirdName, lastName,
+                                    dateOfBirth, gender, address, phone, email,
+                                    nationalityCountryID, imagePath, createdBy);
+                if (id != -1)
                 {
                     MessageBox.Show("Person Added Successfully");
+                    DataCreated?.Invoke(id,
+                                    nationalID, firstName, secondName, thirdName, lastName,
+                                    dateOfBirth, gender, address, phone, email,
+                                    nationalityCountryID, imagePath, createdBy);
                     this.Close();
                 }
                 else

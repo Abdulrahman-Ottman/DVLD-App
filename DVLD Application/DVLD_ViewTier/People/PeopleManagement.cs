@@ -19,6 +19,36 @@ namespace DVLD_ViewTier.People
             InitializeComponent();
         }
 
+        private void ReFetchDataFromDB()
+        {
+            peopleData = PersonController.GetAllPeople();
+            LoadDataToGridView();
+        }
+        private void AddRowToDataTable(int id,
+                string nationalID, string firstName, string secondName,
+                string thirdName, string lastName, DateTime dateOfBirth,
+                int gender, string address, string phone, string email,
+                string nationalityCountryID, string imagePath, int createdBy)
+        {
+            DataRow newRow = peopleData.NewRow();
+
+            newRow["Id"] = id;
+            newRow["NationalNumber"] = nationalID;
+            newRow["FirstName"] = firstName;
+            newRow["SecondName"] = secondName;
+            newRow["ThirdName"] = thirdName;
+            newRow["LastName"] = lastName;
+            newRow["DateOfBirth"] = dateOfBirth;
+            newRow["Gender"] = gender;
+            newRow["Address"] = address;
+            newRow["Phone"] = phone;
+            newRow["Email"] = email;
+            newRow["NationalityCountryID"] = nationalityCountryID;
+            newRow["ImagePath"] = imagePath;
+            newRow["Created_by"] = createdBy;
+
+            peopleData.Rows.Add(newRow);
+        }
         private void LoadDataToGridView()
         {
             dgvViewPeople.DataSource = peopleData;
@@ -41,6 +71,7 @@ namespace DVLD_ViewTier.People
         private void btnAddNewPerson_Click(object sender, System.EventArgs e)
         {
             AddPerson addPerson = new AddPerson();
+            addPerson.DataCreated += AddRowToDataTable;
             addPerson.ShowDialog();
         }
 

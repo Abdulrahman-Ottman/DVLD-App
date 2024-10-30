@@ -112,8 +112,18 @@ namespace DVLD_DataAccessTier
             return clsHelpers.PeopleQueryCommandExecuter(command);
 
         }
-
-        public static bool AddNewPerson(clsPerson person)
+        public static clsPerson FindPersonByNationalNumber(string NationalNumber)
+        {
+            if(NationalNumber == null)
+            {
+              return null;  
+            }
+            string query = "select * from People where NationalNo = @NationalNumber";
+            SqlCommand command = new SqlCommand (query , clsSettings.connection);
+            command.Parameters.AddWithValue("@NationalNumber" , NationalNumber);
+            return clsHelpers.FindPersonByID(command);
+        }
+        public static int AddNewPerson(clsPerson person)
         {
             bool result = false;
 
@@ -141,10 +151,16 @@ namespace DVLD_DataAccessTier
                 command.Parameters.AddWithValue("@ImagePath", person.ImagePath);
                 command.Parameters.AddWithValue("@Created_by", person.Created_by);
 
+
                 result = clsHelpers.NonQueryCommandExecuter(command);
             }
+            if (result)
+            {
+                int personId = FindPersonByNationalNumber(person.NationalNumber).Id;
+                return personId;
+            }
 
-            return result;
+            return -1;
         }
 
     }

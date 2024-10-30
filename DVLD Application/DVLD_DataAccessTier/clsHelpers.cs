@@ -121,7 +121,45 @@ namespace DVLD_DataAccessTier
             return results;
 
         }
+        static public clsPerson FindPersonByNationalNumber(SqlCommand command)
+        {
+            clsPerson person = null;
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                   person = new clsPerson();
+                    person.Id = int.Parse(reader["PersonId"].ToString());
+                    person.NationalNumber = reader["NationalNo"].ToString();
+                    person.FirstName = reader["FirstName"].ToString();
+                    person.SecondName = reader["SecondName"].ToString();
+                    person.ThirdName = reader["ThirdName"].ToString();
+                    person.LastName = reader["LastName"].ToString();
+                    person.DateOfBirth = DateTime.Parse(reader["DateOfBirth"].ToString());
+                    person.Gender = int.Parse(reader["Gender"].ToString());
+                    person.Address = reader["Address"].ToString();
+                    person.Phone = reader["Phone"].ToString();
+                    person.Email = reader["Email"].ToString();
+                    person.NationalityCountryID = reader["NationalityCountryID"].ToString();
+                    person.ImagePath = reader["ImagePath"].ToString();
+                    person.Created_by = int.Parse(reader["created_by"].ToString());
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return person;
+        }
 
 
     }
