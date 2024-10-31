@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using DVLD_BusinessTier;
 
@@ -70,7 +69,7 @@ namespace DVLD_ViewTier.People
 
         private void btnAddNewPerson_Click(object sender, System.EventArgs e)
         {
-            AddPerson addPerson = new AddPerson();
+            AddEditPerson addPerson = new AddEditPerson();
             addPerson.DataCreated += AddRowToDataTable;
             addPerson.ShowDialog();
         }
@@ -239,6 +238,50 @@ namespace DVLD_ViewTier.People
                     break;
             }
             LoadDataToGridView();
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
+                People.AddEditPerson EditScreen = new AddEditPerson(id);
+                EditScreen.ShowDialog();
+                ReFetchDataFromDB();
+                LoadDataToGridView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+        }
+
+        private void dgvViewPeople_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Get the row index of the row that was clicked
+                var hitTestInfo = dgvViewPeople.HitTest(e.X, e.Y);
+
+                // Check if the click was on a row
+                if (hitTestInfo.RowIndex >= 0)
+                {
+                    // Select the clicked row
+                    dgvViewPeople.ClearSelection();
+                    dgvViewPeople.Rows[hitTestInfo.RowIndex].Selected = true;
+
+                    // Optionally, set the current cell if needed
+                    dgvViewPeople.CurrentCell = dgvViewPeople.Rows[hitTestInfo.RowIndex].Cells[0];
+                }
+            }
+        }
+
+        private void dgvViewPeople_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvViewPeople.IsCurrentCellDirty && dgvViewPeople.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvViewPeople.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
         }
     }
     }

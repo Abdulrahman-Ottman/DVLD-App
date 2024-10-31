@@ -58,11 +58,11 @@
     <Compile Include="MainScreen\MainScreen.Designer.cs">
       <DependentUpon>MainScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="People\AddPerson.cs">
+    <Compile Include="People\AddEditPerson.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="People\AddPerson.Designer.cs">
-      <DependentUpon>AddPerson.cs</DependentUpon>
+    <Compile Include="People\AddEditPerson.Designer.cs">
+      <DependentUpon>AddEditPerson.cs</DependentUpon>
     </Compile>
     <Compile Include="People\PeopleManagement.cs">
       <SubType>Form</SubType>
@@ -78,8 +78,8 @@
     <EmbeddedResource Include="MainScreen\MainScreen.resx">
       <DependentUpon>MainScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="People\AddPerson.resx">
-      <DependentUpon>AddPerson.cs</DependentUpon>
+    <EmbeddedResource Include="People\AddEditPerson.resx">
+      <DependentUpon>AddEditPerson.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="People\PeopleManagement.resx">
       <DependentUpon>PeopleManagement.cs</DependentUpon>

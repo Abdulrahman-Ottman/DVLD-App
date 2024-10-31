@@ -28,13 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.dgvViewPeople = new System.Windows.Forms.DataGridView();
+            this.cmsPersonOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbFilters = new System.Windows.Forms.ComboBox();
             this.btnAddNewPerson = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.dgvViewPeople)).BeginInit();
+            this.cmsPersonOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,11 +62,43 @@
             this.dgvViewPeople.AllowUserToDeleteRows = false;
             this.dgvViewPeople.AllowUserToOrderColumns = true;
             this.dgvViewPeople.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvViewPeople.ContextMenuStrip = this.cmsPersonOptions;
             this.dgvViewPeople.Location = new System.Drawing.Point(4, 220);
             this.dgvViewPeople.Name = "dgvViewPeople";
             this.dgvViewPeople.ReadOnly = true;
             this.dgvViewPeople.Size = new System.Drawing.Size(1010, 286);
             this.dgvViewPeople.TabIndex = 2;
+            this.dgvViewPeople.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvViewPeople_CurrentCellDirtyStateChanged);
+            this.dgvViewPeople.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dgvViewPeople_MouseDown);
+            // 
+            // cmsPersonOptions
+            // 
+            this.cmsPersonOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.editToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.cmsPersonOptions.Name = "cmsPersonOptions";
+            this.cmsPersonOptions.Size = new System.Drawing.Size(108, 76);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            // 
+            // showToolStripMenuItem
+            // 
+            this.showToolStripMenuItem.Name = "showToolStripMenuItem";
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.showToolStripMenuItem.Text = "Show";
             // 
             // label2
             // 
@@ -116,6 +155,11 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(104, 6);
+            // 
             // PeopleManagement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -132,6 +176,7 @@
             this.Text = "PeopleManagement";
             this.Load += new System.EventHandler(this.PeopleManagement_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvViewPeople)).EndInit();
+            this.cmsPersonOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -146,5 +191,10 @@
         private System.Windows.Forms.Button btnAddNewPerson;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbFilters;
+        private System.Windows.Forms.ContextMenuStrip cmsPersonOptions;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

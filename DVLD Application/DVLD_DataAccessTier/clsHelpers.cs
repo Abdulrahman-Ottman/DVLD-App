@@ -121,7 +121,7 @@ namespace DVLD_DataAccessTier
             return results;
 
         }
-        static public clsPerson FindPersonByNationalNumber(SqlCommand command)
+        static public clsPerson FindPersonCommandExecuter(SqlCommand command)
         {
             clsPerson person = null;
             try

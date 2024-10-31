@@ -121,7 +121,19 @@ namespace DVLD_DataAccessTier
             string query = "select * from People where NationalNo = @NationalNumber";
             SqlCommand command = new SqlCommand (query , clsSettings.connection);
             command.Parameters.AddWithValue("@NationalNumber" , NationalNumber);
-            return clsHelpers.FindPersonByID(command);
+            return clsHelpers.FindPersonCommandExecuter(command);
+        }
+
+        public static clsPerson FindPersonByID(string id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+            string query = "select * from People where PersonID = @id";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@id", id);
+            return clsHelpers.FindPersonCommandExecuter(command);
         }
         public static int AddNewPerson(clsPerson person)
         {
@@ -162,6 +174,53 @@ namespace DVLD_DataAccessTier
 
             return -1;
         }
+        public static int UpdatePerson(clsPerson person)
+        {
+            bool result = false;
 
+            if (person != null)
+            {
+                string query = @"UPDATE Person
+                 SET NationalNumber = @NationalNumber,
+                     FirstName = @FirstName,
+                     SecondName = @SecondName,
+                     ThirdName = @ThirdName,
+                     LastName = @LastName,
+                     DateOfBirth = @DateOfBirth,
+                     Gender = @Gender,
+                     Address = @Address,
+                     Phone = @Phone,
+                     Email = @Email,
+                     NationalityCountryID = @NationalityCountryID,
+                     ImagePath = @ImagePath,
+                     Created_by = @CreatedBy
+                 WHERE Id = @Id";
+
+                SqlCommand command = new SqlCommand(query, clsSettings.connection);
+
+                command.Parameters.AddWithValue("@Id", person.Id);
+                command.Parameters.AddWithValue("@NationalNumber", person.NationalNumber);
+                command.Parameters.AddWithValue("@FirstName", person.FirstName);
+                command.Parameters.AddWithValue("@SecondName", person.SecondName);
+                command.Parameters.AddWithValue("@ThirdName", person.ThirdName);
+                command.Parameters.AddWithValue("@LastName", person.LastName);
+                command.Parameters.AddWithValue("@DateOfBirth", person.DateOfBirth);
+                command.Parameters.AddWithValue("@Gender", person.Gender);
+                command.Parameters.AddWithValue("@Address", person.Address);
+                command.Parameters.AddWithValue("@Phone", person.Phone);
+                command.Parameters.AddWithValue("@Email", person.Email);
+                command.Parameters.AddWithValue("@NationalityCountryID", person.NationalityCountryID);
+                command.Parameters.AddWithValue("@ImagePath", person.ImagePath);
+                command.Parameters.AddWithValue("@Created_by", person.Created_by);
+
+                result = clsHelpers.NonQueryCommandExecuter(command);
+            }
+            if (result)
+            {
+                return person.Id;
+            }
+
+            return -1;
+        }
     }
 }
