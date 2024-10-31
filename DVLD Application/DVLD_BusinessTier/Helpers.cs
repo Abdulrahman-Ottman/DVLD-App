@@ -103,6 +103,30 @@ namespace DVLD_BusinessTier
             }
             return null;
         }
+        public static Dictionary<string , string> GetPersonDataByNationalNumber(string nationalNumber)
+        {
+            Dictionary<string , string> personData = new Dictionary<string , string>();
+            clsPerson person  = clsPerson.FindPersonByNationalNumber(nationalNumber);
+            if (person != null)
+            {
+                personData["Id"] = person.Id.ToString();
+                personData["NationalNumber"] = person.NationalNumber;
+                personData["FirstName"] = person.FirstName;
+                personData["SecondName"] = person.SecondName;
+                personData["ThirdName"] = person.ThirdName;
+                personData["LastName"] = person.LastName;
+                personData["DateOfBirth"] = person.DateOfBirth.ToString("yyyy-MM-dd");
+                personData["Gender"] = person.Gender.ToString();
+                personData["Address"] = person.Address;
+                personData["Phone"] = person.Phone;
+                personData["Email"] = person.Email;
+                personData["NationalityCountryID"] = person.NationalityCountryID;
+                personData["ImagePath"] = person.ImagePath;
+                personData["Created_by"] = person.Created_by.ToString();
+                return personData;
+            }
+            return null;
+        }
 
     }
 }

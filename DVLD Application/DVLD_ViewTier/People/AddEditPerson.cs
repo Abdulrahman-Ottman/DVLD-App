@@ -141,6 +141,7 @@ namespace DVLD_ViewTier.People
                 }
                 else if (mode == enMode.Update)
                 {
+                    imagePath = Helpers.GetPersonDataByNationalNumber(nationalID)["ImagePath"];
                     id = PersonController.UpdatePerson(
                                         nationalID, firstName, secondName, thirdName, lastName,
                                         dateOfBirth, gender, address, phone, email,

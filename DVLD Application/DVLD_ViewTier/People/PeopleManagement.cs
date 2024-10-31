@@ -48,6 +48,28 @@ namespace DVLD_ViewTier.People
 
             peopleData.Rows.Add(newRow);
         }
+
+        private void UpdateRowInDataTable(int id,
+        string nationalID, string firstName, string secondName,
+        string thirdName, string lastName, DateTime dateOfBirth,
+        int gender, string address, string phone, string email,
+        string nationalityCountryID, string imagePath, int createdBy)
+        {
+            DataRow row = peopleData.Rows.Find(id);
+            row["NationalNumber"] = nationalID;
+            row["FirstName"] = firstName;
+            row["SecondName"] = secondName;
+            row["ThirdName"] = thirdName;
+            row["LastName"] = lastName;
+            row["DateOfBirth"] = dateOfBirth;
+            row["Gender"] = gender;
+            row["Address"] = address;
+            row["Phone"] = phone;
+            row["Email"] = email;
+            row["NationalityCountryID"] = nationalityCountryID;
+            row["ImagePath"] = imagePath;
+            row["Created_by"] = createdBy;
+        }
         private void LoadDataToGridView()
         {
             dgvViewPeople.DataSource = peopleData;
@@ -70,7 +92,7 @@ namespace DVLD_ViewTier.People
         private void btnAddNewPerson_Click(object sender, System.EventArgs e)
         {
             AddEditPerson addPerson = new AddEditPerson();
-            addPerson.DataCreated += AddRowToDataTable;
+            addPerson.DataStatusChanged += AddRowToDataTable;
             addPerson.ShowDialog();
         }
 
@@ -246,8 +268,8 @@ namespace DVLD_ViewTier.People
             {
                 int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
                 People.AddEditPerson EditScreen = new AddEditPerson(id);
+                EditScreen.DataStatusChanged += UpdateRowInDataTable;
                 EditScreen.ShowDialog();
-                ReFetchDataFromDB();
                 LoadDataToGridView();
             }
             catch (Exception ex)

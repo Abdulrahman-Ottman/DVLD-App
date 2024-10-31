@@ -180,8 +180,8 @@ namespace DVLD_DataAccessTier
 
             if (person != null)
             {
-                string query = @"UPDATE Person
-                 SET NationalNumber = @NationalNumber,
+                string query = @"UPDATE People
+                 SET NationalNo = @NationalNumber,
                      FirstName = @FirstName,
                      SecondName = @SecondName,
                      ThirdName = @ThirdName,
@@ -193,8 +193,8 @@ namespace DVLD_DataAccessTier
                      Email = @Email,
                      NationalityCountryID = @NationalityCountryID,
                      ImagePath = @ImagePath,
-                     Created_by = @CreatedBy
-                 WHERE Id = @Id";
+                     Created_by = @Created_by
+                 WHERE PersonID = @Id";
 
                 SqlCommand command = new SqlCommand(query, clsSettings.connection);
 
