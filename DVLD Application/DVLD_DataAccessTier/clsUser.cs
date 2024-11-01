@@ -51,5 +51,34 @@ namespace DVLD_DataAccessTier
             }
             return auth;
         }
+
+        public static string GetUserNameByID(int id)
+        {
+            string result = null;
+            string query = "select * from Users where UserID = @id";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@id", id);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    result = reader["UserName"].ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return result;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using DVLD_BusinessTier;
 
@@ -55,6 +56,7 @@ namespace DVLD_ViewTier.People
         int gender, string address, string phone, string email,
         string nationalityCountryID, string imagePath, int createdBy)
         {
+           
             DataRow row = peopleData.Rows.Find(id);
             row["NationalNumber"] = nationalID;
             row["FirstName"] = firstName;
@@ -62,13 +64,13 @@ namespace DVLD_ViewTier.People
             row["ThirdName"] = thirdName;
             row["LastName"] = lastName;
             row["DateOfBirth"] = dateOfBirth;
-            row["Gender"] = gender;
+            row["Gender"] = Helpers.ConvertToGenderName(gender);
             row["Address"] = address;
             row["Phone"] = phone;
             row["Email"] = email;
-            row["NationalityCountryID"] = nationalityCountryID;
+            row["NationalityCountry"] = Helpers.GetCountryNameByID(nationalityCountryID);
             row["ImagePath"] = imagePath;
-            row["Created_by"] = createdBy;
+
         }
         private void LoadDataToGridView()
         {
@@ -304,6 +306,51 @@ namespace DVLD_ViewTier.People
             {
                 dgvViewPeople.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
+                if (PersonController.DeletePerson(id))
+                {
+                    MessageBox.Show("Person Deleted Successfully");
+                    DataRow rowToDelete = peopleData.Select($"Id = {id}").FirstOrDefault();
+                    if (rowToDelete != null)
+                    {
+                        peopleData.Rows.Remove(rowToDelete);
+                        peopleData.AcceptChanges();
+                        LoadDataToGridView();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Error : Could not delete selected person");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+        }
+
+        private void showToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
+                Dictionary<string,string> personData = new Dictionary<string,string>();
+                personData = Helpers.GetPersonDataByID(id.ToString());
+                ShowPersonInfo showPersonInfo = new ShowPersonInfo(personData);
+                showPersonInfo.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+  
         }
     }
     }

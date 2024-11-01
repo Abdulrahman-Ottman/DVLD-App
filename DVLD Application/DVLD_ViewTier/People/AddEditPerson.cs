@@ -10,6 +10,8 @@ namespace DVLD_ViewTier.People
     public partial class AddEditPerson : Form
     {
         private string imagePath = null;
+        private int personIdToUpdate = -1;
+        private string nationalityCountryID = "1";
         private enum enMode
         {
             Add =0 ,
@@ -28,6 +30,7 @@ namespace DVLD_ViewTier.People
         }
         public AddEditPerson(int id)
         {
+            personIdToUpdate = id;
             InitializeComponent();
             Dictionary<string , string> personData = Helpers.GetPersonDataByID(id.ToString());
 
@@ -63,10 +66,10 @@ namespace DVLD_ViewTier.People
 
                 if (personData.ContainsKey("NationalityCountryID"))
                 {
-                    cbCountry.SelectedValue = personData["NationalityCountryID"];
+                    nationalityCountryID = personData["NationalityCountryID"];
                 }
 
-                
+
                 pbPersonaleImage.Image = Image.FromFile(personData["ImagePath"]);
 
                 mode = enMode.Update;
@@ -141,11 +144,17 @@ namespace DVLD_ViewTier.People
                 }
                 else if (mode == enMode.Update)
                 {
-                    imagePath = Helpers.GetPersonDataByNationalNumber(nationalID)["ImagePath"];
-                    id = PersonController.UpdatePerson(
+
+                    id = personIdToUpdate;
+                    imagePath = Helpers.GetPersonDataByID(id.ToString())["ImagePath"];
+
+
+
+                        PersonController.UpdatePerson(id ,
                                         nationalID, firstName, secondName, thirdName, lastName,
                                         dateOfBirth, gender, address, phone, email,
                                         nationalityCountryID, imagePath, createdBy);
+
                     if (id > 0)
                     {
                         MessageBox.Show("Person Updated Successfully");
@@ -179,6 +188,7 @@ namespace DVLD_ViewTier.People
         private void AddPerson_Load(object sender, EventArgs e)
         {
             LoadCourtiers();
+            cbCountry.SelectedValue = nationalityCountryID;
         }
 
         private bool ValidateForm()

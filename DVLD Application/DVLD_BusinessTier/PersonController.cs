@@ -31,7 +31,7 @@ namespace DVLD_BusinessTier
                     Address = address,
                     Phone = phone,
                     Email = email,
-                    NationalityCountryID = nationalityCountryID,
+                    NationalityCountryID = nationalityCountryID.ToString(),
                     ImagePath = imagePath,
                     Created_by = createdBy
                 };
@@ -39,14 +39,14 @@ namespace DVLD_BusinessTier
                 return clsPerson.AddNewPerson(person);
             }
 
-        public static int UpdatePerson(string nationalNumber, string firstName, string secondName,
+        public static int UpdatePerson(int id ,string nationalNumber, string firstName, string secondName,
                               string thirdName, string lastName, DateTime dateOfBirth, int gender,
                               string address, string phone, string email, string nationalityCountryID,
                               string imagePath, int createdBy)
         {
             clsPerson person = new clsPerson
             {
-                Id = clsPerson.FindPersonByNationalNumber(nationalNumber).Id,
+                Id = id,
                 NationalNumber = nationalNumber,
                 FirstName = firstName,
                 SecondName = secondName,
@@ -67,6 +67,11 @@ namespace DVLD_BusinessTier
         public static DataTable GetPeopleBasedOnFilter(string filter, string value)
         {
             return clsPerson.GetPeopleBasedOnFilter(filter,value);
+        }
+
+        public static bool DeletePerson(int personID)
+        {
+            return clsPerson.DeletePerson(personID);
         }
     }
 }

@@ -13,5 +13,9 @@ namespace DVLD_BusinessTier
         {
             return clsSettings.currentUser.UserId;
         }
+        public static string GetCurrentUserName()
+        {
+            return clsSettings.currentUser.UserName;
+        }
     }
 }

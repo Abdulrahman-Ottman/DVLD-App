@@ -96,7 +96,7 @@ namespace DVLD_BusinessTier
                 personData["Address"] = person.Address;
                 personData["Phone"] = person.Phone;
                 personData["Email"] = person.Email;
-                personData["NationalityCountryID"] = person.NationalityCountryID;
+                personData["NationalityCountryID"] = person.NationalityCountryID.ToString();
                 personData["ImagePath"] = person.ImagePath;
                 personData["Created_by"] = person.Created_by.ToString();
                 return personData;
@@ -120,13 +120,34 @@ namespace DVLD_BusinessTier
                 personData["Address"] = person.Address;
                 personData["Phone"] = person.Phone;
                 personData["Email"] = person.Email;
-                personData["NationalityCountryID"] = person.NationalityCountryID;
+                personData["NationalityCountryID"] = person.NationalityCountryID.ToString();
                 personData["ImagePath"] = person.ImagePath;
                 personData["Created_by"] = person.Created_by.ToString();
                 return personData;
             }
             return null;
         }
+        public static string GetCountryNameByID(string countryID) {
+            return  clsCountry.GetCountryNameByID(countryID);
+        }
+        public static string GetUserNameByID(int id)
+        {
+            return clsUser.GetUserNameByID(id);
+        }
 
+        public static string ConvertToGenderName(int gender)
+        {
+            string result = null;
+            switch (gender)
+            {
+                case 1:
+                    result = "Male";
+                    break;
+                case 2:
+                    result = "FeMale";
+                    break;
+            }
+            return result;
+        }
     }
 }
