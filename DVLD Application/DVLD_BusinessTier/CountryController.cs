@@ -11,7 +11,7 @@ namespace DVLD_BusinessTier
     {
         public static Dictionary<string , string> GetAllCountries()
         {
-            return clsHelpers.GetAllCountries();
+            return clsCountry.GetAllCountries();
         }
     }
 }

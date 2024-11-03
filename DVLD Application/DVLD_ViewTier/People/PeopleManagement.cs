@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Runtime.Remoting.Channels;
+using System.Linq;
 using System.Windows.Forms;
 using DVLD_BusinessTier;
 
@@ -28,7 +28,7 @@ namespace DVLD_ViewTier.People
                 string nationalID, string firstName, string secondName,
                 string thirdName, string lastName, DateTime dateOfBirth,
                 int gender, string address, string phone, string email,
-                string nationalityCountryID, string imagePath, int createdBy)
+                string nationalityCountry, string imagePath, int createdBy)
         {
             DataRow newRow = peopleData.NewRow();
 
@@ -39,15 +39,38 @@ namespace DVLD_ViewTier.People
             newRow["ThirdName"] = thirdName;
             newRow["LastName"] = lastName;
             newRow["DateOfBirth"] = dateOfBirth;
-            newRow["Gender"] = gender;
+            newRow["Gender"] = Helpers.ConvertToGenderName(gender);
             newRow["Address"] = address;
             newRow["Phone"] = phone;
             newRow["Email"] = email;
-            newRow["NationalityCountryID"] = nationalityCountryID;
+            newRow["NationalityCountry"] = Helpers.GetCountryNameByID(nationalityCountry);
             newRow["ImagePath"] = imagePath;
-            newRow["Created_by"] = createdBy;
+            newRow["Created_by"] = Helpers.GetUserNameByID(createdBy);
 
             peopleData.Rows.Add(newRow);
+        }
+
+        private void UpdateRowInDataTable(int id,
+        string nationalID, string firstName, string secondName,
+        string thirdName, string lastName, DateTime dateOfBirth,
+        int gender, string address, string phone, string email,
+        string nationalityCountryID, string imagePath, int createdBy)
+        {
+           
+            DataRow row = peopleData.Rows.Find(id);
+            row["NationalNumber"] = nationalID;
+            row["FirstName"] = firstName;
+            row["SecondName"] = secondName;
+            row["ThirdName"] = thirdName;
+            row["LastName"] = lastName;
+            row["DateOfBirth"] = dateOfBirth;
+            row["Gender"] = Helpers.ConvertToGenderName(gender);
+            row["Address"] = address;
+            row["Phone"] = phone;
+            row["Email"] = email;
+            row["NationalityCountry"] = Helpers.GetCountryNameByID(nationalityCountryID);
+            row["ImagePath"] = imagePath;
+
         }
         private void LoadDataToGridView()
         {
@@ -70,8 +93,8 @@ namespace DVLD_ViewTier.People
 
         private void btnAddNewPerson_Click(object sender, System.EventArgs e)
         {
-            AddPerson addPerson = new AddPerson();
-            addPerson.DataCreated += AddRowToDataTable;
+            AddEditPerson addPerson = new AddEditPerson();
+            addPerson.DataStatusChanged += AddRowToDataTable;
             addPerson.ShowDialog();
         }
 
@@ -88,8 +111,6 @@ namespace DVLD_ViewTier.People
             switch (fieldName)
             {
                 case "None":
-                    peopleData = PersonController.GetAllPeople();
-                    LoadDataToGridView();
                     break;
                 case "NationalNumber":
                 case "FirstName":
@@ -166,7 +187,7 @@ namespace DVLD_ViewTier.People
                     break;
 
                 default:
-                    throw new ArgumentException($"Field '{fieldName}' is not supported.");
+                    throw new ArgumentException($"Filter '{fieldName}' is not supported.");
             }
             currentFilterControl = inputControl;
             this.Controls.Add(inputControl);
@@ -177,7 +198,8 @@ namespace DVLD_ViewTier.People
             {
                 inputControl_SelectedIndexChanged(combo , new EventArgs());
             }
-
+            peopleData = PersonController.GetAllPeople();
+            LoadDataToGridView();
 
         }         
         private void inputControl_TextChanged(object sender , EventArgs e)
@@ -239,6 +261,95 @@ namespace DVLD_ViewTier.People
                     break;
             }
             LoadDataToGridView();
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
+                People.AddEditPerson EditScreen = new AddEditPerson(id);
+                EditScreen.DataStatusChanged += UpdateRowInDataTable;
+                EditScreen.ShowDialog();
+                LoadDataToGridView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+        }
+
+        private void dgvViewPeople_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Get the row index of the row that was clicked
+                var hitTestInfo = dgvViewPeople.HitTest(e.X, e.Y);
+
+                // Check if the click was on a row
+                if (hitTestInfo.RowIndex >= 0)
+                {
+                    // Select the clicked row
+                    dgvViewPeople.ClearSelection();
+                    dgvViewPeople.Rows[hitTestInfo.RowIndex].Selected = true;
+
+                    // Optionally, set the current cell if needed
+                    dgvViewPeople.CurrentCell = dgvViewPeople.Rows[hitTestInfo.RowIndex].Cells[0];
+                }
+            }
+        }
+
+        private void dgvViewPeople_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvViewPeople.IsCurrentCellDirty && dgvViewPeople.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvViewPeople.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
+                if (PersonController.DeletePerson(id))
+                {
+                    MessageBox.Show("Person Deleted Successfully");
+                    DataRow rowToDelete = peopleData.Select($"Id = {id}").FirstOrDefault();
+                    if (rowToDelete != null)
+                    {
+                        peopleData.Rows.Remove(rowToDelete);
+                        peopleData.AcceptChanges();
+                        LoadDataToGridView();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Error : Could not delete selected person");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+        }
+
+        private void showToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                int id = (int)(dgvViewPeople.CurrentRow.Cells[0].Value);
+                Dictionary<string,string> personData = new Dictionary<string,string>();
+                personData = Helpers.GetPersonDataByID(id.ToString());
+                ShowPersonInfo showPersonInfo = new ShowPersonInfo(personData);
+                showPersonInfo.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+  
         }
     }
     }

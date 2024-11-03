@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -79,6 +80,111 @@ namespace DVLD_BusinessTier
 
             return isValid; // If the date is valid
         }
+        public static bool ValidateUnique(string tableName , string fieldName , string ExpectedValue , bool updateMode = false)
+        {
+            bool isValid = false;  
+            string query = $"select * from {tableName} where {fieldName} = @ExpectedValue";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@ExpectedValue" , ExpectedValue);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                int rowCount = 0;
 
+                while (reader.Read())
+                {
+                    rowCount++;
+                }
+
+                if (rowCount < 1 && !updateMode)
+                {
+                    isValid = true;
+                }
+                if(rowCount < 2 && updateMode)
+                {
+                    isValid = true;
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return isValid;
+        }
+        public static Dictionary<string , string> GetPersonDataByID(string id)
+        {
+            Dictionary<string , string> personData = new Dictionary<string , string>();
+            clsPerson person  = clsPerson.FindPersonByID(id);
+            if (person != null)
+            {
+                personData["Id"] = person.Id.ToString();
+                personData["NationalNumber"] = person.NationalNumber;
+                personData["FirstName"] = person.FirstName;
+                personData["SecondName"] = person.SecondName;
+                personData["ThirdName"] = person.ThirdName;
+                personData["LastName"] = person.LastName;
+                personData["DateOfBirth"] = person.DateOfBirth.ToString("yyyy-MM-dd");
+                personData["Gender"] = person.Gender.ToString();
+                personData["Address"] = person.Address;
+                personData["Phone"] = person.Phone;
+                personData["Email"] = person.Email;
+                personData["NationalityCountryID"] = person.NationalityCountryID.ToString();
+                personData["ImagePath"] = person.ImagePath;
+                personData["Created_by"] = person.Created_by.ToString();
+                return personData;
+            }
+            return null;
+        }
+        public static Dictionary<string , string> GetPersonDataByNationalNumber(string nationalNumber)
+        {
+            Dictionary<string , string> personData = new Dictionary<string , string>();
+            clsPerson person  = clsPerson.FindPersonByNationalNumber(nationalNumber);
+            if (person != null)
+            {
+                personData["Id"] = person.Id.ToString();
+                personData["NationalNumber"] = person.NationalNumber;
+                personData["FirstName"] = person.FirstName;
+                personData["SecondName"] = person.SecondName;
+                personData["ThirdName"] = person.ThirdName;
+                personData["LastName"] = person.LastName;
+                personData["DateOfBirth"] = person.DateOfBirth.ToString("yyyy-MM-dd");
+                personData["Gender"] = person.Gender.ToString();
+                personData["Address"] = person.Address;
+                personData["Phone"] = person.Phone;
+                personData["Email"] = person.Email;
+                personData["NationalityCountryID"] = person.NationalityCountryID.ToString();
+                personData["ImagePath"] = person.ImagePath;
+                personData["Created_by"] = person.Created_by.ToString();
+                return personData;
+            }
+            return null;
+        }
+        public static string GetCountryNameByID(string countryID) {
+            return  clsCountry.GetCountryNameByID(countryID);
+        }
+        public static string GetUserNameByID(int id)
+        {
+            return clsUser.GetUserNameByID(id);
+        }
+
+        public static string ConvertToGenderName(int gender)
+        {
+            string result = null;
+            switch (gender)
+            {
+                case 1:
+                    result = "Male";
+                    break;
+                case 2:
+                    result = "FeMale";
+                    break;
+            }
+            return result;
+        }
     }
 }

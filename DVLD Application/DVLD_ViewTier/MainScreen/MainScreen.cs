@@ -22,5 +22,11 @@ namespace DVLD_ViewTier.MainScreen
             People.PeopleManagement peopleManagement = new People.PeopleManagement();
             peopleManagement.Show();
         }
+
+        private void tsmUsers_Click(object sender, EventArgs e)
+        {
+            Users.UsersManagement usersManagement = new Users.UsersManagement();
+            usersManagement.Show();
+        }
     }
 }

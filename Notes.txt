@@ -1,0 +1,2 @@
+1-fix the validation to check if the email and the national number are unique 
+2-add some icones to enhance the UI (done)

@@ -20,25 +20,33 @@ namespace DVLD_DataAccessTier
             results.Columns.Add("ThirdName", typeof(string));
             results.Columns.Add("LastName", typeof(string));
             results.Columns.Add("DateOfBirth", typeof(DateTime));
-            results.Columns.Add("Gender", typeof(int));
+            results.Columns.Add("Gender", typeof(string));
             results.Columns.Add("Address", typeof(string));
             results.Columns.Add("Phone", typeof(string));
             results.Columns.Add("Email", typeof(string));
-            results.Columns.Add("NationalityCountryID", typeof(string));
+            results.Columns.Add("NationalityCountry", typeof(string));
             results.Columns.Add("ImagePath", typeof(string));
-            results.Columns.Add("Created_by", typeof(int));
+            results.Columns.Add("Created_by", typeof(string));
+            return results;
+        }
+        static public DataTable GenerateUsersDataTable()
+        {
+            DataTable results = new DataTable();
+            results.Columns.Add("UserID", typeof(int));
+            results.Columns.Add("UserName", typeof(string));
+            results.Columns.Add("IsActive", typeof(bool));
             return results;
         }
         static public DataTable PeopleQueryCommandExecuter(SqlCommand command)
         {
             DataTable results = GeneratePeopleDataTable();
-
             try
             {
                 clsSettings.connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
+                    string gender = int.Parse(reader["Gender"].ToString()) == 1 ? "Male" : "FeMale";
                     results.Rows.Add(
                           reader["PersonId"],
                           reader["NationalNo"],
@@ -47,13 +55,13 @@ namespace DVLD_DataAccessTier
                           reader["ThirdName"],
                           reader["LastName"],
                           reader["DateOfBirth"],
-                          reader["Gender"],
+                          gender,
                           reader["Address"],
                           reader["Phone"],
                           reader["Email"],
-                          reader["NationalityCountryID"],
+                          reader["CountryName"],
                           reader["ImagePath"],
-                          reader["created_by"]
+                          reader["UserName"]
                       );
                 }
 
@@ -67,6 +75,35 @@ namespace DVLD_DataAccessTier
                 clsSettings.connection.Close();
             }
 
+
+            return results;
+        }
+
+        static public DataTable UsersQueryCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateUsersDataTable();
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["UserID"],
+                          reader["UserName"],
+                          reader["IsActive"]
+                      );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
 
             return results;
         }
@@ -93,35 +130,7 @@ namespace DVLD_DataAccessTier
 
             return rowsAffected > 0;
         }
-        static public Dictionary<string , string> GetAllCountries()
-        {
-            Dictionary<string , string> results = new Dictionary<string, string>();
-            string query = "select * from Countries";
-            SqlCommand command = new SqlCommand(query, clsSettings.connection);
-            try
-            {
-                clsSettings.connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    results.Add(reader["CountryID"].ToString() , reader["CountryName"].ToString());
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                clsSettings.connection.Close();
-            }
-
-
-            return results;
-
-        }
-        static public clsPerson FindPersonByNationalNumber(SqlCommand command)
+        static public clsPerson FindPersonCommandExecuter(SqlCommand command)
         {
             clsPerson person = null;
             try
@@ -130,7 +139,7 @@ namespace DVLD_DataAccessTier
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                   person = new clsPerson();
+                    person = new clsPerson();
                     person.Id = int.Parse(reader["PersonId"].ToString());
                     person.NationalNumber = reader["NationalNo"].ToString();
                     person.FirstName = reader["FirstName"].ToString();
@@ -150,7 +159,7 @@ namespace DVLD_DataAccessTier
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("error here");
             }
             finally
             {

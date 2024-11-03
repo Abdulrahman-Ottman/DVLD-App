@@ -30,14 +30,14 @@ namespace DVLD_ViewTier
         {
             string userName = tbUserName.Text;
             string password = tbPassword.Text;
-            if (LoginController.AttempLogin(userName, password))
+            if (LoginController.AttemptLogin(userName, password))
             {
                     this.DialogResult = DialogResult.OK; // Sets the result to OK  
                     this.Close(); // Closes the login form  
             }
             else
             {
-                MessageBox.Show("Error : Faild to login");
+                MessageBox.Show("Error : Failed to login");
             }
         }
     }
