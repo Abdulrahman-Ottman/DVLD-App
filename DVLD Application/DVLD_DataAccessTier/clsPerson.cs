@@ -107,8 +107,8 @@ namespace DVLD_DataAccessTier
                     break;
 
                 case "Created_by":
-                    query = $"{GetAllPeopleJoinQuery} where Created_by = @Created_by";
-                    parameterName = "@Created_by";
+                    query = $"{GetAllPeopleJoinQuery} where UserName like '%' + @userName + '%' ";
+                    parameterName = "@userName";
                     break;
 
                 default:
@@ -124,7 +124,7 @@ namespace DVLD_DataAccessTier
         {
             if(NationalNumber == null)
             {
-                throw new Exception("Null NationalNumber");
+                throw new Exception("National Number not provided");
             }
             string query = "select * from People where NationalNo = @NationalNumber";
             SqlCommand command = new SqlCommand (query , clsSettings.connection);

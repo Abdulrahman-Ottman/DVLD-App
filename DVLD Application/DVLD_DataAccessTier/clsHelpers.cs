@@ -29,6 +29,14 @@ namespace DVLD_DataAccessTier
             results.Columns.Add("Created_by", typeof(string));
             return results;
         }
+        static public DataTable GenerateUsersDataTable()
+        {
+            DataTable results = new DataTable();
+            results.Columns.Add("UserID", typeof(int));
+            results.Columns.Add("UserName", typeof(string));
+            results.Columns.Add("IsActive", typeof(bool));
+            return results;
+        }
         static public DataTable PeopleQueryCommandExecuter(SqlCommand command)
         {
             DataTable results = GeneratePeopleDataTable();
@@ -67,6 +75,35 @@ namespace DVLD_DataAccessTier
                 clsSettings.connection.Close();
             }
 
+
+            return results;
+        }
+
+        static public DataTable UsersQueryCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateUsersDataTable();
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["UserID"],
+                          reader["UserName"],
+                          reader["IsActive"]
+                      );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
 
             return results;
         }

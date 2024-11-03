@@ -28,7 +28,7 @@ namespace DVLD_ViewTier.People
                 string nationalID, string firstName, string secondName,
                 string thirdName, string lastName, DateTime dateOfBirth,
                 int gender, string address, string phone, string email,
-                string nationalityCountryID, string imagePath, int createdBy)
+                string nationalityCountry, string imagePath, int createdBy)
         {
             DataRow newRow = peopleData.NewRow();
 
@@ -39,13 +39,13 @@ namespace DVLD_ViewTier.People
             newRow["ThirdName"] = thirdName;
             newRow["LastName"] = lastName;
             newRow["DateOfBirth"] = dateOfBirth;
-            newRow["Gender"] = gender;
+            newRow["Gender"] = Helpers.ConvertToGenderName(gender);
             newRow["Address"] = address;
             newRow["Phone"] = phone;
             newRow["Email"] = email;
-            newRow["NationalityCountryID"] = nationalityCountryID;
+            newRow["NationalityCountry"] = Helpers.GetCountryNameByID(nationalityCountry);
             newRow["ImagePath"] = imagePath;
-            newRow["Created_by"] = createdBy;
+            newRow["Created_by"] = Helpers.GetUserNameByID(createdBy);
 
             peopleData.Rows.Add(newRow);
         }
@@ -111,8 +111,6 @@ namespace DVLD_ViewTier.People
             switch (fieldName)
             {
                 case "None":
-                    peopleData = PersonController.GetAllPeople();
-                    LoadDataToGridView();
                     break;
                 case "NationalNumber":
                 case "FirstName":
@@ -189,7 +187,7 @@ namespace DVLD_ViewTier.People
                     break;
 
                 default:
-                    throw new ArgumentException($"Field '{fieldName}' is not supported.");
+                    throw new ArgumentException($"Filter '{fieldName}' is not supported.");
             }
             currentFilterControl = inputControl;
             this.Controls.Add(inputControl);
@@ -200,7 +198,8 @@ namespace DVLD_ViewTier.People
             {
                 inputControl_SelectedIndexChanged(combo , new EventArgs());
             }
-
+            peopleData = PersonController.GetAllPeople();
+            LoadDataToGridView();
 
         }         
         private void inputControl_TextChanged(object sender , EventArgs e)

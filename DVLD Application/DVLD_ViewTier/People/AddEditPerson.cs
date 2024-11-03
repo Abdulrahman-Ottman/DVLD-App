@@ -18,6 +18,7 @@ namespace DVLD_ViewTier.People
             Update = 1 ,
         }
         private enMode mode = enMode.Add;
+
         public delegate void AddDataToDataTableEventHandler(int id ,string nationalID, string firstName, string secondName,
                     string thirdName, string lastName, DateTime dateOfBirth,
                     int gender, string address, string phone, string email,
@@ -207,6 +208,15 @@ namespace DVLD_ViewTier.People
             isValid &= Helpers.ValidateEmail(tbEmail);
             isValid &= Helpers.ValidatePhoneNumber(tbPhone);
             isValid &= Helpers.ValidateDateTimePicker(dtpDateOfBirth);
+            if (!Helpers.ValidateUnique("People", "Email", tbEmail.Text , (mode == enMode.Update))) {
+                isValid = false;
+                Helpers.errorProvider.SetError(tbEmail, "Email Must Be Unique");
+            }
+            if (!Helpers.ValidateUnique("People", "NationalNo", tbNationalID.Text , (mode == enMode.Update)))
+            {
+                isValid = false;
+                Helpers.errorProvider.SetError(tbNationalID, "National Number Must Be Unique");
+            }
 
             if(imagePath == null && mode == enMode.Add)
             {

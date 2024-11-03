@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 
@@ -20,6 +21,12 @@ namespace DVLD_DataAccessTier
             IsActive = isActive;
         }
 
+        public static DataTable GetAllUsers()
+        {
+            string query = "select UserID,UserName,IsActive from Users";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            return clsHelpers.UsersQueryCommandExecuter(command);
+        }
         public static bool AttemptLogin(clsUser user)
         {
             bool auth = false;  

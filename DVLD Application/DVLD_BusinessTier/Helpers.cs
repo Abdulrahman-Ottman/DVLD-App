@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -78,6 +79,42 @@ namespace DVLD_BusinessTier
             }
 
             return isValid; // If the date is valid
+        }
+        public static bool ValidateUnique(string tableName , string fieldName , string ExpectedValue , bool updateMode = false)
+        {
+            bool isValid = false;  
+            string query = $"select * from {tableName} where {fieldName} = @ExpectedValue";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@ExpectedValue" , ExpectedValue);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                int rowCount = 0;
+
+                while (reader.Read())
+                {
+                    rowCount++;
+                }
+
+                if (rowCount < 1 && !updateMode)
+                {
+                    isValid = true;
+                }
+                if(rowCount < 2 && updateMode)
+                {
+                    isValid = true;
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return isValid;
         }
         public static Dictionary<string , string> GetPersonDataByID(string id)
         {
