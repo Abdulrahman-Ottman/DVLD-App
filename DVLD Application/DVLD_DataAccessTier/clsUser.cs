@@ -87,5 +87,24 @@ namespace DVLD_DataAccessTier
 
             return result;
         }
+
+        public static int AddUser(clsUser user)
+        {
+            string query = "INSERT INTO Users (UserName, Password , IsActive) Values (@UserName, @Password , @IsActive)";
+            SqlCommand command = new SqlCommand(query , clsSettings.connection);
+            command.Parameters.AddWithValue ("@UserName", user.UserName);
+            command.Parameters.AddWithValue ("@IsActive", user.IsActive);
+            command.Parameters.AddWithValue ("@Password", user.Password);
+
+            if (clsHelpers.NonQueryCommandExecuter(command))
+            {
+                query = "select * from Users where UserName = @UserName";
+                command = new SqlCommand (query , clsSettings.connection);
+                command.Parameters.AddWithValue("@UserName" , user.UserName);
+
+                return clsHelpers.FindUserCommandExecuter(command).UserId;
+            }
+            return -1;
+        }
     }
 }

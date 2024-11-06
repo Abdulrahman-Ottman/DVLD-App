@@ -159,7 +159,7 @@ namespace DVLD_DataAccessTier
             }
             catch (Exception ex)
             {
-                throw new Exception("error here");
+                throw new Exception("Error : couldn't find the person");
             }
             finally
             {
@@ -170,7 +170,35 @@ namespace DVLD_DataAccessTier
             return person;
         }
 
+        static public clsUser FindUserCommandExecuter(SqlCommand command)
+        {
+            clsUser user = null;
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    user = new clsUser();
+                    user.UserId = int.Parse(reader["UserID"].ToString());
+                    user.UserName = reader["UserName"].ToString();
+                    user.IsActive = bool.Parse(reader["IsActive"].ToString());
 
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("Error : couldn't find the user");
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return user;
+        }
     }
 }
 

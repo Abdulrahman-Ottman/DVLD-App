@@ -18,9 +18,17 @@ namespace DVLD_BusinessTier
         {
             return clsSettings.currentUser.UserName;
         }
-
         public static DataTable GetAllUsers() { 
             return clsUser.GetAllUsers();
+        }
+        public static int AddUser(string UserName , string Password , bool IsActive)
+        {
+            clsUser user = new clsUser { 
+                UserName = UserName ,
+                Password = Password ,
+                IsActive = IsActive
+            };
+            return clsUser.AddUser(user);
         }
     }
 }
