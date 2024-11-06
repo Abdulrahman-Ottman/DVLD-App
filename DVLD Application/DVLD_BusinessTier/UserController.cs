@@ -30,5 +30,9 @@ namespace DVLD_BusinessTier
             };
             return clsUser.AddUser(user);
         }
+        public static DataTable GetUsersBasedOnFilter(string filter , string value)
+        {
+            return clsUser.GetUsersBasedOnFilter (filter, value);
+        }
     }
 }

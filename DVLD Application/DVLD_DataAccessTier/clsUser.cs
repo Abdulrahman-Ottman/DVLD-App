@@ -27,6 +27,27 @@ namespace DVLD_DataAccessTier
             SqlCommand command = new SqlCommand(query, clsSettings.connection);
             return clsHelpers.UsersQueryCommandExecuter(command);
         }
+        public static DataTable GetUsersBasedOnFilter(string filter , string value) {
+            string query = "select * from Users";
+            string parameterName = null;
+            switch (filter)
+            {
+                case "None":
+                    break;
+                case "UserName":
+                    query = $"{query} where UserName Like '%' + @UserName + '%'";
+                    parameterName = "@UserName";
+                    break;
+
+                case "IsActive":
+                    query = $"{query} where IsActive = @IsActive ";
+                    parameterName = "@IsActive";
+                    break;
+            }
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue(parameterName, value);
+            return clsHelpers.UsersQueryCommandExecuter(command);
+            }
         public static bool AttemptLogin(clsUser user)
         {
             bool auth = false;  

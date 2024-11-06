@@ -46,9 +46,19 @@ namespace DVLD_ViewTier.Users
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (ValidateForm()){
-                MessageBox.Show(UserController.AddUser(tbUserName.Text, tbPassword.Text, cbIsActive.Checked).ToString());
+            if (ValidateForm())
+            {
+                if (UserController.AddUser(tbUserName.Text, tbPassword.Text, cbIsActive.Checked) != -1)
+                {
+                    MessageBox.Show("User Added Successfully");
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add the user");
+                }
             }
         }
+
+
     }
 }

@@ -44,7 +44,6 @@ namespace DVLD_DataAccessTier
         {
             string query;
             string parameterName = "None";
-
             switch (filter)
             {
                 case "None":
@@ -52,8 +51,8 @@ namespace DVLD_DataAccessTier
                     break;
 
                 case "NationalNumber":
-                    query = $"{GetAllPeopleJoinQuery} where NationalNo Like '%' + @NationalNumber + '%'";
-                    parameterName = "@NationalNumber";
+                    query = $"{GetAllPeopleJoinQuery} where NationalNo Like '%' + @NationalNo + '%'";
+                    parameterName = "@NationalNo";
                     break;
 
                 case "FirstName":

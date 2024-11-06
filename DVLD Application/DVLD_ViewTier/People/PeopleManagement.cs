@@ -151,7 +151,6 @@ namespace DVLD_ViewTier.People
                     ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("Male", 1));
                     ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("Female", 2));
 
-                    // Set the properties to display text and store value
                     ((ComboBox)inputControl).DisplayMember = "Key";
                     ((ComboBox)inputControl).ValueMember = "Value";
 
@@ -194,9 +193,11 @@ namespace DVLD_ViewTier.People
             if (inputControl is DateTimePicker date)
             {
                 inputControl_ValueChanged(date , new EventArgs());
+                return;
             } else if (inputControl is ComboBox combo)
             {
                 inputControl_SelectedIndexChanged(combo , new EventArgs());
+                return;
             }
             peopleData = PersonController.GetAllPeople();
             LoadDataToGridView();
