@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dapper;
 using DVLD_DataAccessTier;
 
 namespace DVLD_BusinessTier
@@ -80,31 +81,26 @@ namespace DVLD_BusinessTier
 
             return isValid; // If the date is valid
         }
-        public static bool ValidateUnique(string tableName , string fieldName , string ExpectedValue , bool updateMode = false)
+        public static bool ValidateUnique(string tableName, string columnName, string value, string primaryKeyColumn = null, int? id = null)
         {
-            bool isValid = false;  
-            string query = $"select * from {tableName} where {fieldName} = @ExpectedValue";
-            SqlCommand command = new SqlCommand(query, clsSettings.connection);
-            command.Parameters.AddWithValue("@ExpectedValue" , ExpectedValue);
+            string query = id.HasValue && primaryKeyColumn != null
+                ? $"SELECT COUNT(*) FROM {tableName} WHERE {columnName} = @Value AND {primaryKeyColumn} != @Id"
+                : $"SELECT COUNT(*) FROM {tableName} WHERE {columnName} = @Value";
+
+            SqlCommand command = new SqlCommand(query , clsSettings.connection);
+
+            command.Parameters.AddWithValue("@Value" , value);
+
+            if (id.HasValue && primaryKeyColumn != null)
+            {
+                command.Parameters.AddWithValue("@Id", id);
+            }
+
+            int count = -1;
             try
             {
                 clsSettings.connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                int rowCount = 0;
-
-                while (reader.Read())
-                {
-                    rowCount++;
-                }
-
-                if (rowCount < 1 && !updateMode)
-                {
-                    isValid = true;
-                }
-                if(rowCount < 2 && updateMode)
-                {
-                    isValid = true;
-                }
+                count = (int)command.ExecuteScalar();
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
@@ -114,8 +110,9 @@ namespace DVLD_BusinessTier
                 clsSettings.connection.Close();
             }
 
-            return isValid;
+            return count == 0;
         }
+
         public static Dictionary<string , string> GetPersonDataByID(string id)
         {
             Dictionary<string , string> personData = new Dictionary<string , string>();

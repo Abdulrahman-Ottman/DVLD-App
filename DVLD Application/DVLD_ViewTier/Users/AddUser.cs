@@ -13,6 +13,9 @@ namespace DVLD_ViewTier.Users
 {
     public partial class AddUser : Form
     {
+        public delegate void AddDataToDataTableEventHandler(int UserID , string UserName, bool IsActive);
+
+        public event AddDataToDataTableEventHandler DataStatusChanged;
         public AddUser()
         {
             InitializeComponent();
@@ -48,9 +51,17 @@ namespace DVLD_ViewTier.Users
         {
             if (ValidateForm())
             {
-                if (UserController.AddUser(tbUserName.Text, tbPassword.Text, cbIsActive.Checked) != -1)
+                int id = UserController.AddUser(tbUserName.Text, tbPassword.Text, cbIsActive.Checked);
+                if (id != -1)
                 {
                     MessageBox.Show("User Added Successfully");
+
+                    DataStatusChanged?.Invoke( id ,tbUserName.Text , cbIsActive.Checked);
+                    tbUserName.Clear();
+                    tbPassword.Clear();
+                    tbConfirmPassword.Clear();
+                    cbIsActive.Checked = false;
+
                 }
                 else
                 {

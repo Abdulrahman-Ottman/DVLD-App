@@ -37,6 +37,8 @@ namespace DVLD_ViewTier.People
 
             if (personData != null)
             {
+                label1.Text =  "Edit Person";
+
                 tbNationalID.Text = personData.ContainsKey("NationalNumber") ? personData["NationalNumber"] : string.Empty;
                 tbFirstName.Text = personData.ContainsKey("FirstName") ? personData["FirstName"] : string.Empty;
                 tbSecondName.Text = personData.ContainsKey("SecondName") ? personData["SecondName"] : string.Empty;
@@ -101,7 +103,8 @@ namespace DVLD_ViewTier.People
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (ValidateForm())
+            bool validationResult = (mode == enMode.Update) ? ValidateForm("PersonID" , personIdToUpdate) : ValidateForm();
+            if (validationResult)
             {
                 bool statusChanged = false;
                 int gender = -1;
@@ -192,7 +195,7 @@ namespace DVLD_ViewTier.People
             cbCountry.SelectedValue = nationalityCountryID;
         }
 
-        private bool ValidateForm()
+        private bool ValidateForm(string primaryKeyColumn = null ,int? id = null)
         {
             bool isValid = true;
 
@@ -208,11 +211,11 @@ namespace DVLD_ViewTier.People
             isValid &= Helpers.ValidateEmail(tbEmail);
             isValid &= Helpers.ValidatePhoneNumber(tbPhone);
             isValid &= Helpers.ValidateDateTimePicker(dtpDateOfBirth);
-            if (!Helpers.ValidateUnique("People", "Email", tbEmail.Text , (mode == enMode.Update))) {
+            if (!Helpers.ValidateUnique("People", "Email", tbEmail.Text , primaryKeyColumn , id )) {
                 isValid = false;
                 Helpers.errorProvider.SetError(tbEmail, "Email Must Be Unique");
             }
-            if (!Helpers.ValidateUnique("People", "NationalNo", tbNationalID.Text , (mode == enMode.Update)))
+            if (!Helpers.ValidateUnique("People", "NationalNo", tbNationalID.Text, primaryKeyColumn, id))
             {
                 isValid = false;
                 Helpers.errorProvider.SetError(tbNationalID, "National Number Must Be Unique");

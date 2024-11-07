@@ -7,3 +7,5 @@ C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_BusinessT
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_Bus.C375E8FF.Up2Date
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_BusinessTier.dll
 C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\obj\Debug\DVLD_BusinessTier.pdb
+C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\Dapper.dll
+C:\Projects\DVLD APP\DVLD Application\DVLD_BusinessTier\bin\Debug\Dapper.xml

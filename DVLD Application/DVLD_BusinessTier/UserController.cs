@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DVLD_BusinessTier
 {
@@ -33,6 +34,27 @@ namespace DVLD_BusinessTier
         public static DataTable GetUsersBasedOnFilter(string filter , string value)
         {
             return clsUser.GetUsersBasedOnFilter (filter, value);
+        }
+        public static Dictionary<string , string> FindUserByID(int id)
+        {
+            clsUser user = clsUser.GetUserByID(id);
+            Dictionary<string,string> result = new Dictionary<string,string>();
+
+            result.Add("UserID", user.UserId.ToString());
+            result.Add("UserName", user.UserName);
+            result.Add("Password", user.Password);
+            result.Add("IsActive", user.IsActive.ToString());
+            return result;
+        }
+        public static bool UpdateUser(int id , string userName , string Password , bool isActive)
+        {
+            clsUser user = new clsUser { 
+                UserId = id,
+                UserName = userName ,
+                Password = Password ,
+                IsActive = isActive
+            };
+            return clsUser.UpdateUser(user);
         }
     }
 }

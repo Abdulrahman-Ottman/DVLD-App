@@ -1,13 +1,16 @@
 ﻿using DVLD_BusinessTier;
+using DVLD_ViewTier.People;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace DVLD_ViewTier.Users
 {
@@ -45,9 +48,19 @@ namespace DVLD_ViewTier.Users
         private void button1_Click(object sender, EventArgs e)
         {
             AddUser addUser = new AddUser();
+            addUser.DataStatusChanged += AddRowToDataTable;
             addUser.ShowDialog();
         }
+        private void AddRowToDataTable(int id , string UserName , bool IsActive)
+        {
+            DataRow newRow = Users.NewRow();
 
+            newRow["UserID"] = id;
+            newRow["UserName"] = UserName;
+            newRow["IsActive"] = IsActive;
+
+            Users.Rows.Add(newRow);
+        }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (currentSelectedFilter != null) { 
@@ -116,5 +129,49 @@ namespace DVLD_ViewTier.Users
             }
 
         }
+
+
+        private void dgvUsersList_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvUsersList.IsCurrentCellDirty && dgvUsersList.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvUsersList.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void dgvUsersList_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Get the row index of the row that was clicked
+                var hitTestInfo = dgvUsersList.HitTest(e.X, e.Y);
+
+                // Check if the click was on a row
+                if (hitTestInfo.RowIndex >= 0)
+                {
+                    // Select the clicked row
+                    dgvUsersList.ClearSelection();
+                    dgvUsersList.Rows[hitTestInfo.RowIndex].Selected = true;
+
+                    // Optionally, set the current cell if needed
+                    dgvUsersList.CurrentCell = dgvUsersList.Rows[hitTestInfo.RowIndex].Cells[0];
+                }
+            }
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                int id = (int)(dgvUsersList.CurrentRow.Cells[0].Value);
+                EditUser EditScreen = new EditUser(id);
+                EditScreen.ShowDialog();
+        }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No Person Selected");
+            }
+}
     }
 }
