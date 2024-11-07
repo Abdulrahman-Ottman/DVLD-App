@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 
 namespace DVLD_DataAccessTier
@@ -177,5 +178,13 @@ namespace DVLD_DataAccessTier
             }
             return updated;
         }
+        public static bool DeleteUser(int userID)
+        {
+            string query = "Delete From Users Where UserID = @UserID";
+            SqlCommand command = new SqlCommand(query , clsSettings.connection);
+            command.Parameters.AddWithValue("@UserID" , userID);
+            return clsHelpers.NonQueryCommandExecuter (command);
+        }
+
     }
 }

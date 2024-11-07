@@ -21,3 +21,4 @@ C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Pers
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Users.UsersManagement.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Users.AddUser.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Users.EditUser.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Users.ChangePassword.resources

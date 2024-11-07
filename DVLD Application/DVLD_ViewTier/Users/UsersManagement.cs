@@ -18,7 +18,7 @@ namespace DVLD_ViewTier.Users
     public partial class UsersManagement : Form
     {
         private DataTable Users = UserController.GetAllUsers();
-        static DataColumn[] keyColumns = new DataColumn[1];
+
         static Control currentSelectedFilter = null;
 
         public UsersManagement()
@@ -28,8 +28,6 @@ namespace DVLD_ViewTier.Users
 
         private void UsersManagement_Load(object sender, EventArgs e)
         {
-            keyColumns[0] = Users.Columns["Id"];
-            Users.PrimaryKey = keyColumns;
             cbUserFilters.SelectedIndex = 0;
             LoadDataToGridView();
         }
@@ -43,7 +41,19 @@ namespace DVLD_ViewTier.Users
              Users = UserController.GetAllUsers();
             LoadDataToGridView();
         }
-    
+        private void UpdateRowInDataTable(int id , string userName , bool isActive)
+        {
+            try
+            {
+                DataRow row = Users.Rows.Find(id);
+                row["UserName"] = userName;
+                row["IsActive"] = isActive;
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -165,13 +175,48 @@ namespace DVLD_ViewTier.Users
             try
             {
                 int id = (int)(dgvUsersList.CurrentRow.Cells[0].Value);
-                EditUser EditScreen = new EditUser(id);
-                EditScreen.ShowDialog();
-        }
+                EditUser editScreen = new EditUser(id);
+                editScreen.DataStatusChanged += UpdateRowInDataTable;
+                editScreen.ShowDialog();
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error : No Person Selected");
+                MessageBox.Show("Error : No User Selected");
             }
 }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)(dgvUsersList.CurrentRow.Cells[0].Value);
+                if (UserController.DeleteUser(id))
+                {
+                    MessageBox.Show("User Deleted Successfully");
+                }
+                else
+                {
+                    MessageBox.Show("Error : Failed to delete the user");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No User Selected");
+            }
+        }
+
+        private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)(dgvUsersList.CurrentRow.Cells[0].Value);
+                ChangePassword changePassword = new ChangePassword(id);
+                changePassword.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error : No User Selected");
+            }
+        }
     }
 }

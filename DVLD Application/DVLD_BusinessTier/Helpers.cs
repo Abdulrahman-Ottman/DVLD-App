@@ -88,7 +88,6 @@ namespace DVLD_BusinessTier
                 : $"SELECT COUNT(*) FROM {tableName} WHERE {columnName} = @Value";
 
             SqlCommand command = new SqlCommand(query , clsSettings.connection);
-
             command.Parameters.AddWithValue("@Value" , value);
 
             if (id.HasValue && primaryKeyColumn != null)

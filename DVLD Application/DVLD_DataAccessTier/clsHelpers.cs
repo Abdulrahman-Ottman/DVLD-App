@@ -27,14 +27,24 @@ namespace DVLD_DataAccessTier
             results.Columns.Add("NationalityCountry", typeof(string));
             results.Columns.Add("ImagePath", typeof(string));
             results.Columns.Add("Created_by", typeof(string));
+
+             DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["Id"];
+            results.PrimaryKey = keyColumns;
             return results;
         }
         static public DataTable GenerateUsersDataTable()
         {
             DataTable results = new DataTable();
+           
             results.Columns.Add("UserID", typeof(int));
             results.Columns.Add("UserName", typeof(string));
             results.Columns.Add("IsActive", typeof(bool));
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["UserID"];
+            results.PrimaryKey = keyColumns;
+
             return results;
         }
         static public DataTable PeopleQueryCommandExecuter(SqlCommand command)

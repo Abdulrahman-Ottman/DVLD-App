@@ -15,6 +15,10 @@ namespace DVLD_ViewTier.Users
     {
         Dictionary<string, string> userData;
         int UserIdToEdit = -1;
+        public delegate void AddDataToDataTableEventHandler(int UserID, string UserName, bool IsActive);
+        
+        public event AddDataToDataTableEventHandler DataStatusChanged;
+
         private enum enMode
         {
             Add = 0,
@@ -25,6 +29,7 @@ namespace DVLD_ViewTier.Users
         {
             InitializeComponent();
             UserIdToEdit = id;
+            mode = enMode.Update;
             userData = UserController.FindUserByID(id);
             tbNewUserName.Text = userData["UserName"];
             cbIsActive.Checked = bool.Parse(userData["IsActive"]);
@@ -43,6 +48,7 @@ namespace DVLD_ViewTier.Users
                     if (UserController.UpdateUser(int.Parse(userData["UserID"]), tbNewUserName.Text, userData["Password"], cbIsActive.Checked))
                     {
                         MessageBox.Show("User Updated Successfully");
+                        DataStatusChanged?.Invoke(int.Parse(userData["UserID"]), tbNewUserName.Text , cbIsActive.Checked);
                         this.Close();
                     }
                     else

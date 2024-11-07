@@ -56,5 +56,6 @@ namespace DVLD_BusinessTier
             };
             return clsUser.UpdateUser(user);
         }
+        public static bool DeleteUser(int id) { return clsUser.DeleteUser(id); }
     }
 }

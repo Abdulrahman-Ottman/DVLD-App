@@ -11,7 +11,6 @@ namespace DVLD_ViewTier.People
     public partial class PeopleManagement : Form
     {
         DataTable peopleData = PersonController.GetAllPeople();
-        static DataColumn[] keyColumns = new DataColumn[1];
 
         Control currentFilterControl = null;
         public PeopleManagement()
@@ -86,8 +85,7 @@ namespace DVLD_ViewTier.People
         private void PeopleManagement_Load(object sender, System.EventArgs e)
         {
             cmbFilters.SelectedIndex = 0;
-            keyColumns[0] = peopleData.Columns["Id"];
-            peopleData.PrimaryKey = keyColumns;
+  
             LoadDataToGridView();
         }
 
