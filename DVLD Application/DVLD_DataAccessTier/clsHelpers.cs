@@ -27,14 +27,24 @@ namespace DVLD_DataAccessTier
             results.Columns.Add("NationalityCountry", typeof(string));
             results.Columns.Add("ImagePath", typeof(string));
             results.Columns.Add("Created_by", typeof(string));
+
+             DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["Id"];
+            results.PrimaryKey = keyColumns;
             return results;
         }
         static public DataTable GenerateUsersDataTable()
         {
             DataTable results = new DataTable();
+           
             results.Columns.Add("UserID", typeof(int));
             results.Columns.Add("UserName", typeof(string));
             results.Columns.Add("IsActive", typeof(bool));
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["UserID"];
+            results.PrimaryKey = keyColumns;
+
             return results;
         }
         static public DataTable PeopleQueryCommandExecuter(SqlCommand command)
@@ -159,7 +169,7 @@ namespace DVLD_DataAccessTier
             }
             catch (Exception ex)
             {
-                throw new Exception("error here");
+                throw new Exception("Error : couldn't find the person");
             }
             finally
             {
@@ -170,7 +180,35 @@ namespace DVLD_DataAccessTier
             return person;
         }
 
+        static public clsUser FindUserCommandExecuter(SqlCommand command)
+        {
+            clsUser user = null;
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    user = new clsUser();
+                    user.UserId = int.Parse(reader["UserID"].ToString());
+                    user.UserName = reader["UserName"].ToString();
+                    user.IsActive = bool.Parse(reader["IsActive"].ToString());
 
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("Error : couldn't find the user");
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return user;
+        }
     }
 }
 

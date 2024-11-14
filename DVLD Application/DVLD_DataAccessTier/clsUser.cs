@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 
 namespace DVLD_DataAccessTier
@@ -27,6 +28,27 @@ namespace DVLD_DataAccessTier
             SqlCommand command = new SqlCommand(query, clsSettings.connection);
             return clsHelpers.UsersQueryCommandExecuter(command);
         }
+        public static DataTable GetUsersBasedOnFilter(string filter , string value) {
+            string query = "select * from Users";
+            string parameterName = null;
+            switch (filter)
+            {
+                case "None":
+                    break;
+                case "UserName":
+                    query = $"{query} where UserName Like '%' + @UserName + '%'";
+                    parameterName = "@UserName";
+                    break;
+
+                case "IsActive":
+                    query = $"{query} where IsActive = @IsActive ";
+                    parameterName = "@IsActive";
+                    break;
+            }
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue(parameterName, value);
+            return clsHelpers.UsersQueryCommandExecuter(command);
+            }
         public static bool AttemptLogin(clsUser user)
         {
             bool auth = false;  
@@ -87,5 +109,82 @@ namespace DVLD_DataAccessTier
 
             return result;
         }
+        public static clsUser GetUserByID(int id) {
+            clsUser user = new clsUser();
+            string query = "select * from Users where UserID = @id";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@id", id);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    user.UserId = int.Parse(reader["UserID"].ToString());
+                    user.UserName = reader["UserName"].ToString();
+                    user.Password = reader["Password"].ToString();
+                    user.IsActive = bool.Parse(reader["IsActive"].ToString());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return user;
+        }
+
+        public static int AddUser(clsUser user)
+        {
+            string query = "INSERT INTO Users (UserName, Password , IsActive) Values (@UserName, @Password , @IsActive)";
+            SqlCommand command = new SqlCommand(query , clsSettings.connection);
+            command.Parameters.AddWithValue ("@UserName", user.UserName);
+            command.Parameters.AddWithValue ("@IsActive", user.IsActive);
+            command.Parameters.AddWithValue ("@Password", user.Password);
+
+            if (clsHelpers.NonQueryCommandExecuter(command))
+            {
+                query = "select * from Users where UserName = @UserName";
+                command = new SqlCommand (query , clsSettings.connection);
+                command.Parameters.AddWithValue("@UserName" , user.UserName);
+
+                return clsHelpers.FindUserCommandExecuter(command).UserId;
+            }
+            return -1;
+        }
+        public static bool UpdateUser(clsUser user)
+        {
+            bool updated = false;
+            if (user != null)
+            {
+                string query = @"UPDATE Users
+                 SET UserName = @UserName,
+                     Password = @Password,
+                     IsActive = @IsActive
+                 WHERE UserID = @Id";
+
+                SqlCommand command = new SqlCommand(query , clsSettings.connection);
+                command.Parameters.AddWithValue("@UserName" , user.UserName);
+                command.Parameters.AddWithValue("@Password" , user.Password);
+                command.Parameters.AddWithValue("@IsActive" , user.IsActive);
+                command.Parameters.AddWithValue("@Id" , user.UserId);
+                updated = clsHelpers.NonQueryCommandExecuter(command);
+            }
+            return updated;
+        }
+        public static bool DeleteUser(int userID)
+        {
+            string query = "Delete From Users Where UserID = @UserID";
+            SqlCommand command = new SqlCommand(query , clsSettings.connection);
+            command.Parameters.AddWithValue("@UserID" , userID);
+            return clsHelpers.NonQueryCommandExecuter (command);
+        }
+
     }
 }

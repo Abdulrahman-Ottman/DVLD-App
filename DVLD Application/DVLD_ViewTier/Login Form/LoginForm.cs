@@ -37,7 +37,10 @@ namespace DVLD_ViewTier
             }
             else
             {
-                MessageBox.Show("Error : Failed to login");
+                MessageBox.Show("Error: Failed to login, credentials do not match.",
+                                "Login Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
         }
     }
