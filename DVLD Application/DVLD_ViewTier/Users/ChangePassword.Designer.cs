@@ -71,6 +71,7 @@
             this.tbCurrentPassword.Name = "tbCurrentPassword";
             this.tbCurrentPassword.Size = new System.Drawing.Size(141, 20);
             this.tbCurrentPassword.TabIndex = 3;
+            this.tbCurrentPassword.UseSystemPasswordChar = true;
             // 
             // tbNewPassword
             // 
@@ -78,6 +79,7 @@
             this.tbNewPassword.Name = "tbNewPassword";
             this.tbNewPassword.Size = new System.Drawing.Size(141, 20);
             this.tbNewPassword.TabIndex = 4;
+            this.tbNewPassword.UseSystemPasswordChar = true;
             // 
             // tbConfirmPassword
             // 
@@ -85,6 +87,7 @@
             this.tbConfirmPassword.Name = "tbConfirmPassword";
             this.tbConfirmPassword.Size = new System.Drawing.Size(141, 20);
             this.tbConfirmPassword.TabIndex = 5;
+            this.tbConfirmPassword.UseSystemPasswordChar = true;
             // 
             // btnSave
             // 
@@ -110,7 +113,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(272, 139);
+            this.ClientSize = new System.Drawing.Size(278, 139);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.tbConfirmPassword);

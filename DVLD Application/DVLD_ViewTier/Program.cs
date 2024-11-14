@@ -27,7 +27,6 @@ namespace DVLD_ViewTier
                 }
                 else
                 {
-                    // If login was not successful, exit the application or handle accordingly  
                     Application.Exit();
                 }
             }

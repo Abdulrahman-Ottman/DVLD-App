@@ -36,6 +36,8 @@
             this.tsmDrivers = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmUsers = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmAccountSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.changePasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,12 +112,33 @@
             // 
             // tsmAccountSettings
             // 
+            this.tsmAccountSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changePasswordToolStripMenuItem,
+            this.logoutToolStripMenuItem});
             this.tsmAccountSettings.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.tsmAccountSettings.Image = global::DVLD_ViewTier.Properties.Resources.settings;
             this.tsmAccountSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsmAccountSettings.Name = "tsmAccountSettings";
             this.tsmAccountSettings.Size = new System.Drawing.Size(164, 36);
             this.tsmAccountSettings.Text = "Account Settings";
+            // 
+            // changePasswordToolStripMenuItem
+            // 
+            this.changePasswordToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.changePasswordToolStripMenuItem.Image = global::DVLD_ViewTier.Properties.Resources.password__1_;
+            this.changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
+            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(187, 24);
+            this.changePasswordToolStripMenuItem.Text = "Change Password";
+            this.changePasswordToolStripMenuItem.Click += new System.EventHandler(this.changePasswordToolStripMenuItem_Click);
+            // 
+            // logoutToolStripMenuItem
+            // 
+            this.logoutToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.logoutToolStripMenuItem.Image = global::DVLD_ViewTier.Properties.Resources.sign_out;
+            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(187, 24);
+            this.logoutToolStripMenuItem.Text = "Logout";
+            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
             // MainScreen
             // 
@@ -144,5 +167,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsmDrivers;
         private System.Windows.Forms.ToolStripMenuItem tsmUsers;
         private System.Windows.Forms.ToolStripMenuItem tsmAccountSettings;
+        private System.Windows.Forms.ToolStripMenuItem changePasswordToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
     }
 }

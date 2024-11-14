@@ -19,6 +19,10 @@ namespace DVLD_BusinessTier
         {
             return clsSettings.currentUser.UserName;
         }
+        public static void ClearCurrentUserData()
+        {
+            clsSettings.currentUser = null;
+        }
         public static DataTable GetAllUsers() { 
             return clsUser.GetAllUsers();
         }
@@ -57,5 +61,6 @@ namespace DVLD_BusinessTier
             return clsUser.UpdateUser(user);
         }
         public static bool DeleteUser(int id) { return clsUser.DeleteUser(id); }
+
     }
 }

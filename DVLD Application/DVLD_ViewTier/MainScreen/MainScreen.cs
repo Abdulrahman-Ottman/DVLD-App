@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DVLD_BusinessTier;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -28,5 +29,22 @@ namespace DVLD_ViewTier.MainScreen
             Users.UsersManagement usersManagement = new Users.UsersManagement();
             usersManagement.Show();
         }
+
+        private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Users.ChangePassword changePassword = new Users.ChangePassword(UserController.GetCurrentUserID());
+            changePassword.ShowDialog();
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Close the main screen
+            this.Close();
+
+            // Restart the application from Program.Main
+            Application.Restart();
+        }
+
+
     }
 }
