@@ -30,6 +30,7 @@ namespace DVLD_ViewTier.Users
         {
             cbUserFilters.SelectedIndex = 0;
             LoadDataToGridView();
+            lbRecordCount.Text = $"# Records : {Users.Rows.Count}";
         }
         private void LoadDataToGridView()
         {
@@ -98,6 +99,8 @@ namespace DVLD_ViewTier.Users
                         DropDownStyle = ComboBoxStyle.DropDownList,
                         Location = new Point(195, 157)
                     };
+                    ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("All", -1));
+
                     ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("True", 1));
                     ((ComboBox)inputControl).Items.Add(new KeyValuePair<string, int>("False", 0));
 
@@ -134,7 +137,14 @@ namespace DVLD_ViewTier.Users
             {
                 int selectedValue = selectedItem.Value;
 
-                Users = UserController.GetUsersBasedOnFilter("IsActive", selectedValue.ToString());
+                if (selectedValue != -1)
+                {
+                    Users = UserController.GetUsersBasedOnFilter("IsActive", selectedValue.ToString());
+                }
+                else
+                {
+                    Users = UserController.GetAllUsers();
+                }
                 LoadDataToGridView();
             }
 

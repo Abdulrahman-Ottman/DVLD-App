@@ -38,10 +38,8 @@ namespace DVLD_ViewTier.MainScreen
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Close the main screen
             this.Close();
 
-            // Restart the application from Program.Main
             Application.Restart();
         }
 

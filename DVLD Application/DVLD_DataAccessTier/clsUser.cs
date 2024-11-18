@@ -62,7 +62,7 @@ namespace DVLD_DataAccessTier
                 {
                     clsSettings.connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
-                    if (reader.Read())
+                    if (reader.Read() && (bool)reader["IsActive"])
                     {
                         auth = true;
                         clsSettings.currentUser = new clsUser((int)reader["UserID"], reader["UserName"].ToString() , reader["Password"].ToString() , (bool)reader["IsActive"]);

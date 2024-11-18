@@ -193,6 +193,7 @@ namespace DVLD_ViewTier.People
         {
             LoadCourtiers();
             cbCountry.SelectedValue = nationalityCountryID;
+            dtpDateOfBirth.MaxDate = DateTime.Today.AddYears(-18);
         }
 
         private bool ValidateForm(string primaryKeyColumn = null ,int? id = null)

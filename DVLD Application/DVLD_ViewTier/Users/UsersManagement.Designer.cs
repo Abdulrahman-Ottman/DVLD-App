@@ -40,6 +40,7 @@
             this.cbUserFilters = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.lbRecordCount = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsersList)).BeginInit();
             this.cmsUsersMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -80,13 +81,13 @@
             this.toolStripSeparator1,
             this.changePasswordToolStripMenuItem});
             this.cmsUsersMenuStrip.Name = "contextMenuStrip1";
-            this.cmsUsersMenuStrip.Size = new System.Drawing.Size(181, 98);
+            this.cmsUsersMenuStrip.Size = new System.Drawing.Size(169, 76);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Image = global::DVLD_ViewTier.Properties.Resources.edit__1_;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
@@ -94,20 +95,20 @@
             // 
             this.deleteToolStripMenuItem.Image = global::DVLD_ViewTier.Properties.Resources.delete;
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
             // 
             // changePasswordToolStripMenuItem
             // 
             this.changePasswordToolStripMenuItem.Image = global::DVLD_ViewTier.Properties.Resources.password__1_;
             this.changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
-            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.changePasswordToolStripMenuItem.Text = "Change Password";
             this.changePasswordToolStripMenuItem.Click += new System.EventHandler(this.changePasswordToolStripMenuItem_Click);
             // 
@@ -155,11 +156,22 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // lbRecordCount
+            // 
+            this.lbRecordCount.AutoSize = true;
+            this.lbRecordCount.Font = new System.Drawing.Font("Tahoma", 11F);
+            this.lbRecordCount.Location = new System.Drawing.Point(5, 429);
+            this.lbRecordCount.Name = "lbRecordCount";
+            this.lbRecordCount.Size = new System.Drawing.Size(86, 18);
+            this.lbRecordCount.TabIndex = 6;
+            this.lbRecordCount.Text = "# Records :";
+            // 
             // UsersManagement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 450);
+            this.Controls.Add(this.lbRecordCount);
             this.Controls.Add(this.cbUserFilters);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
@@ -191,5 +203,6 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changePasswordToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Label lbRecordCount;
     }
 }

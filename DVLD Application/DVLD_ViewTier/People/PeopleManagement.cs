@@ -87,6 +87,8 @@ namespace DVLD_ViewTier.People
             cmbFilters.SelectedIndex = 0;
   
             LoadDataToGridView();
+
+            lbRecordsCount.Text = $"# Records: {peopleData.Rows.Count}";
         }
 
         private void btnAddNewPerson_Click(object sender, System.EventArgs e)
