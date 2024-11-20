@@ -1,4 +1,5 @@
 ﻿using DVLD_BusinessTier;
+using DVLD_ViewTier.Applications.Applications_Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,6 +44,10 @@ namespace DVLD_ViewTier.MainScreen
             Application.Restart();
         }
 
-
+        private void manageApplicationsTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Applications.Applications_Types.ShowApplicationsTypes showApplicationsTypes = new ShowApplicationsTypes();
+            showApplicationsTypes.Show();
+        }
     }
 }

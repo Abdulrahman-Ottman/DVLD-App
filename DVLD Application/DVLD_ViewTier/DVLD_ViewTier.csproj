@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Applications\Applications_Types\EditApplicationsTypes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\Applications_Types\EditApplicationsTypes.Designer.cs">
+      <DependentUpon>EditApplicationsTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\Applications_Types\ShowApplicationsTypes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\Applications_Types\ShowApplicationsTypes.Designer.cs">
+      <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login Form\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,6 +120,12 @@
     <Compile Include="Users\UsersManagement.Designer.cs">
       <DependentUpon>UsersManagement.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Applications\Applications_Types\EditApplicationsTypes.resx">
+      <DependentUpon>EditApplicationsTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\Applications_Types\ShowApplicationsTypes.resx">
+      <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Login Form\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,6 +261,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\sign_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\id %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\id %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\id %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\form %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\form %283%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\form %284%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\form %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\essay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\essay %281%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

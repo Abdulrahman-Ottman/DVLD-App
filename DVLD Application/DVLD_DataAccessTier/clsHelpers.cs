@@ -10,6 +10,8 @@ namespace DVLD_DataAccessTier
 {
     public class clsHelpers
     {
+
+        //Generaters
         static public DataTable GeneratePeopleDataTable()
         {
             DataTable results = new DataTable();
@@ -33,6 +35,19 @@ namespace DVLD_DataAccessTier
             results.PrimaryKey = keyColumns;
             return results;
         }
+        static public DataTable GenerateApplicationsTypesDataTable()
+        {
+            DataTable results = new DataTable();
+            results.Columns.Add("Id", typeof(int));
+            results.Columns.Add("Title", typeof(string));
+            results.Columns.Add("Fees", typeof(string));
+
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["Id"];
+            results.PrimaryKey = keyColumns;
+            return results;
+        }
         static public DataTable GenerateUsersDataTable()
         {
             DataTable results = new DataTable();
@@ -47,6 +62,10 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+
+
+
+        //Command Executers
         static public DataTable PeopleQueryCommandExecuter(SqlCommand command)
         {
             DataTable results = GeneratePeopleDataTable();
@@ -88,7 +107,6 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
-
         static public DataTable UsersQueryCommandExecuter(SqlCommand command)
         {
             DataTable results = GenerateUsersDataTable();
@@ -117,6 +135,36 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable ApplicationsTypesCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateApplicationsTypesDataTable();
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["ApplicationTypeID"],
+                          reader["ApplicationTypeTitle"],
+                          reader["ApplicationFees"]
+                      );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return results;
+        }
+
+
         static public bool NonQueryCommandExecuter(SqlCommand command)
         {
             int rowsAffected = 0;
@@ -179,7 +227,6 @@ namespace DVLD_DataAccessTier
 
             return person;
         }
-
         static public clsUser FindUserCommandExecuter(SqlCommand command)
         {
             clsUser user = null;
