@@ -65,6 +65,7 @@ namespace DVLD_ViewTier.Applications.Applications_Types
             {
                 int id = (int)(dgvApplicationsTypes.CurrentRow.Cells[0].Value);
                 EditApplicationsTypes editApplicationsTypes = new EditApplicationsTypes(id);
+                editApplicationsTypes.DataUpdated += UpdateRecord;
                 editApplicationsTypes.ShowDialog();
                 LoadDataToGridView();
             }
@@ -73,6 +74,13 @@ namespace DVLD_ViewTier.Applications.Applications_Types
                 MessageBox.Show("Error : No Person Selected");
             }
            
+        }
+
+        private void UpdateRecord(int id , string title , string fees)
+        {
+            DataRow row = ApplicationsTypes.Rows.Find(id);
+            row["Title"] = title;
+            row["Fees"] = fees;
         }
     }
 }
