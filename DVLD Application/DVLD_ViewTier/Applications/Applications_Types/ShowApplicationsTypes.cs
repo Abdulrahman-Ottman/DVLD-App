@@ -71,7 +71,7 @@ namespace DVLD_ViewTier.Applications.Applications_Types
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error : No Person Selected");
+                MessageBox.Show("Error : No Application Selected");
             }
            
         }

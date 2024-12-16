@@ -17,7 +17,6 @@ namespace DVLD_DataAccessTier
             string query = "Select * from ApplicationTypes";
             SqlCommand command = new SqlCommand(query, clsSettings.connection);
             results = clsHelpers.ApplicationsTypesCommandExecuter(command);
-
             return results;
         }
         public static Dictionary<string, string> FindTypeByID(int id)

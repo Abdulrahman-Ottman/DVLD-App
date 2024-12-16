@@ -11,7 +11,7 @@ namespace DVLD_DataAccessTier
     public class clsHelpers
     {
 
-        //Generaters
+        //Generators
         static public DataTable GeneratePeopleDataTable()
         {
             DataTable results = new DataTable();
@@ -40,6 +40,20 @@ namespace DVLD_DataAccessTier
             DataTable results = new DataTable();
             results.Columns.Add("Id", typeof(int));
             results.Columns.Add("Title", typeof(string));
+            results.Columns.Add("Fees", typeof(string));
+
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["Id"];
+            results.PrimaryKey = keyColumns;
+            return results;
+        }
+        static public DataTable GenerateTestsTypesDataTable()
+        {
+            DataTable results = new DataTable();
+            results.Columns.Add("Id", typeof(int));
+            results.Columns.Add("Title", typeof(string));
+            results.Columns.Add("Description", typeof(string));
             results.Columns.Add("Fees", typeof(string));
 
 
@@ -148,6 +162,35 @@ namespace DVLD_DataAccessTier
                           reader["ApplicationTypeID"],
                           reader["ApplicationTypeTitle"],
                           reader["ApplicationFees"]
+                      );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return results;
+        }
+        static public DataTable TestsTypesCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateTestsTypesDataTable();
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["TestTypeID"],
+                          reader["TestTypeTitle"],
+                          reader["TestTypeDescription"],
+                          reader["TestTypeFees"]
                       );
                 }
 

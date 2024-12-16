@@ -51,6 +51,7 @@
     <Compile Include="LoginController.cs" />
     <Compile Include="PersonController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestsTypesController.cs" />
     <Compile Include="UserController.cs" />
   </ItemGroup>
   <ItemGroup>
