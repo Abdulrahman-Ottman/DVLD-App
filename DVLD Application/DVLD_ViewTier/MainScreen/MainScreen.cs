@@ -49,5 +49,11 @@ namespace DVLD_ViewTier.MainScreen
             Applications.Applications_Types.ShowApplicationsTypes showApplicationsTypes = new ShowApplicationsTypes();
             showApplicationsTypes.Show();
         }
+
+        private void manageTeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Tests.ShowTestsTypes showTestsTypes = new Tests.ShowTestsTypes();
+            showTestsTypes.Show();
+        }
     }
 }

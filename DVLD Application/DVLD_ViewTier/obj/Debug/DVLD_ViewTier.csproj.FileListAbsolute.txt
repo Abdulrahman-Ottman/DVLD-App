@@ -24,3 +24,5 @@ C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.User
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Users.ChangePassword.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Applications.Applications_Types.ShowApplicationsTypes.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Applications.Applications_Types.EditApplicationsTypes.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Tests.ShowTestsTypes.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Tests.EditTestsTypes.resources
