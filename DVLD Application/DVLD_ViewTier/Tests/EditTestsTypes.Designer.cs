@@ -37,6 +37,8 @@
             this.tbTitle = new System.Windows.Forms.TextBox();
             this.tbFees = new System.Windows.Forms.TextBox();
             this.tbDescription = new System.Windows.Forms.TextBox();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -44,7 +46,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 18F);
             this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(91, 9);
+            this.label1.Location = new System.Drawing.Point(86, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(166, 29);
             this.label1.TabIndex = 0;
@@ -125,11 +127,33 @@
             this.tbDescription.Size = new System.Drawing.Size(208, 55);
             this.tbDescription.TabIndex = 8;
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(239, 235);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(67, 23);
+            this.btnSave.TabIndex = 9;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.Location = new System.Drawing.Point(163, 235);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(67, 23);
+            this.btnClose.TabIndex = 10;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
             // EditTestsTypes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(345, 245);
+            this.ClientSize = new System.Drawing.Size(327, 267);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.tbDescription);
             this.Controls.Add(this.tbFees);
             this.Controls.Add(this.tbTitle);
@@ -140,7 +164,9 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "EditTestsTypes";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EditTestsTypes";
+            this.Load += new System.EventHandler(this.EditTestsTypes_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,5 +183,7 @@
         private System.Windows.Forms.TextBox tbTitle;
         private System.Windows.Forms.TextBox tbFees;
         private System.Windows.Forms.TextBox tbDescription;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnClose;
     }
 }

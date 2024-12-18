@@ -71,15 +71,22 @@ namespace DVLD_ViewTier.Tests
             try
             {
                 int id = (int)(dgvTestsTypes.CurrentRow.Cells[0].Value);
-                EditTestsTypes editApplicationsTypes = new EditTestsTypes(id);
-                //editApplicationsTypes.DataUpdated += UpdateRecord;
-                editApplicationsTypes.ShowDialog();
+                EditTestsTypes editTestsTypes = new EditTestsTypes(id);
+                editTestsTypes.DataUpdated += UpdateRecord;
+                editTestsTypes.ShowDialog();
                 LoadDataToGridView();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error : No Test Selected");
             }
+        }
+        private void UpdateRecord(int id , string title , string description , string fees)
+        {
+            DataRow row = TestsTypes.Rows.Find(id);
+            row["Title"] = title;
+            row["Description"] = description;   
+            row["Fees"] = fees;
         }
     }
 }
