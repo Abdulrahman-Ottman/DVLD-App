@@ -8,15 +8,16 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace DVLD_ViewTier
 {
     public partial class PersonInfoViewer : UserControl
     {
-        public int Id
+        public string Id
         {
-            get => int.Parse(lbId.Text);
-            set => lbId.Text = value.ToString();
+            get => lbId.Text;
+            set => lbId.Text = value;
         }
 
         public string NationalNumber
@@ -56,10 +57,10 @@ namespace DVLD_ViewTier
 
         }
 
-        public DateTime DateOfBirth
+        public string DateOfBirth
         {
-            get => DateTime.Parse(lbDateOfBirth.Text);
-            set => lbDateOfBirth.Text = value.ToShortDateString();
+            get => lbDateOfBirth.Text;
+            set => lbDateOfBirth.Text = value;
         }
 
         public string Gender
@@ -94,7 +95,13 @@ namespace DVLD_ViewTier
 
         public string ImagePath
         {
-            get;set;
+            get => pictureBox1.ImageLocation;
+            set {
+                if (pictureBox1.ImageLocation != value && !string.IsNullOrEmpty(value))
+                {
+                    pictureBox1.Image = Image.FromFile(value);
+                }
+            }
         }
 
         public string Created_by
@@ -121,13 +128,13 @@ namespace DVLD_ViewTier
             InitializeComponent();
 
             // Assign data to properties
-            Id = id;
+            Id = id.ToString();
             NationalNumber = nationalNumber;
             FirstName = firstName;
             SecondName = secondName;
             ThirdName = thirdName;
             LastName = lastName;
-            DateOfBirth = dateOfBirth;
+            DateOfBirth = dateOfBirth.ToShortDateString();
             Gender = gender;
             Address = address;
             Phone = phone;
@@ -137,10 +144,29 @@ namespace DVLD_ViewTier
             Created_by = createdBy;
         }
 
-        private void PersonInfoViewer_Load(object sender, EventArgs e)
+        public PersonInfoViewer()
+        {
+            InitializeComponent();  // Assign data to properties
+   
+        }
+        
+        public void RefreshName()
         {
             lbName.Text = $"{FirstName} {SecondName} {ThirdName} {LastName}";
-            pictureBox1.Image = Image.FromFile(ImagePath);
+        }
+        private void PersonInfoViewer_Load(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(FirstName))
+            {
+                lbName.Text = $"{FirstName} {SecondName} {ThirdName} {LastName}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(ImagePath))
+            {
+                pictureBox1.Image = Image.FromFile(ImagePath);
+            }
+      
+
         }
     }
 }
