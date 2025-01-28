@@ -182,5 +182,11 @@ namespace DVLD_BusinessTier
             }
             return result;
         }
+
+        public static string GetApplicationTypeFeesByID(int id)
+        {
+            return clsHelpers.GetApplicationTypeFeesByID(id);   
+        }
+
     }
 }

@@ -76,7 +76,23 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable GenerateLicenseClassesDataTable()
+        {
+            DataTable results = new DataTable();
 
+            results.Columns.Add("LicenseClassID", typeof(int));
+            results.Columns.Add("ClassName", typeof(string));
+            results.Columns.Add("ClassDescription", typeof(string));
+            results.Columns.Add("MinimumAllowedAge", typeof(int));
+            results.Columns.Add("DefaultValidityLength", typeof(int));
+            results.Columns.Add("ClassFees", typeof(float));
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["LicenseClassID"];
+            results.PrimaryKey = keyColumns;
+
+            return results;
+        }
 
 
         //Command Executers
@@ -206,7 +222,37 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable LicenseClassesCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateLicenseClassesDataTable();
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["LicenseClassID"],
+                          reader["ClassName"],
+                          reader["ClassDescription"],
+                          reader["MinimumAllowedAge"],
+                          reader["DefaultValidityLength"],
+                          reader["ClassFees"]
+                      );
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return results;
+        }
 
         static public bool NonQueryCommandExecuter(SqlCommand command)
         {
@@ -298,6 +344,34 @@ namespace DVLD_DataAccessTier
 
 
             return user;
+        }
+
+        static public string GetApplicationTypeFeesByID(int id)
+        {
+            string query = "Select ApplicationFees from ApplicationTypes where ApplicationTypeID = @TypeID";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@TypeID", id);
+            string fees = null;
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    fees = reader["ApplicationFees"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+            
+             return fees;
+            
         }
     }
 }

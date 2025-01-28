@@ -18,7 +18,10 @@ namespace DVLD_ViewTier
         {
             InitializeComponent();
         }
-
+        public string getSelectedPersonID()
+        {
+            return personInfoViewer1.Id;
+        }
         private void PersonInfoViewerWithFilters_Load(object sender, EventArgs e)
         {
             cmbFilters.SelectedIndex = 0;

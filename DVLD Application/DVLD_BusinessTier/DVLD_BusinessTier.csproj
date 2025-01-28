@@ -45,9 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationController.cs" />
     <Compile Include="ApplicationsTypesController.cs" />
     <Compile Include="CountryController.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="LicenseClassesController.cs" />
     <Compile Include="LoginController.cs" />
     <Compile Include="PersonController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
