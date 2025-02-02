@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,7 @@ namespace DVLD_DataAccessTier
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader["LicenseClassID"].ToString() == data["LicenseClassID"])
+                    if (reader["LicenseClassID"].ToString() == data["LicenseClassID"] && reader["ApplicationStatus"].ToString() != "2")
                     {
                         return id;
                     }
@@ -56,7 +57,7 @@ namespace DVLD_DataAccessTier
                 command2.Parameters.AddWithValue("@ApplicantPersonID" , data["PersonID"]);
                 command2.Parameters.AddWithValue("@ApplicationDate", data["ApplicationDate"]);
                 command2.Parameters.AddWithValue("@ApplicationTypeID", 1);
-                command2.Parameters.AddWithValue("@ApplicationStatus", 0);
+                command2.Parameters.AddWithValue("@ApplicationStatus", 1);
                 command2.Parameters.AddWithValue("@LastStatusDate", data["ApplicationDate"]);
                 command2.Parameters.AddWithValue("@PaidFees", 0);
                 command2.Parameters.AddWithValue("@CreatedByUserID", data["UserID"]);
@@ -88,5 +89,21 @@ namespace DVLD_DataAccessTier
 
             return id;
         }
+
+        public static DataTable GetAllLocalApplications()
+        {
+            DataTable results = new DataTable();
+            string query = @"SELECT        LicenseClasses.ClassName, Applications.*, People.NationalNo, People.FirstName, People.SecondName, People.ThirdName, People.LastName, LocalDrivingLicenseApplications.LicenseClassID
+FROM                     Applications INNER JOIN
+                         LocalDrivingLicenseApplications ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID INNER JOIN
+                         LicenseClasses ON LocalDrivingLicenseApplications.LicenseClassID = LicenseClasses.LicenseClassID INNER JOIN
+                         People ON Applications.ApplicantPersonID = People.PersonID WHERE Applications.ApplicationTypeID = 1";
+        
+
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            results = clsHelpers.LocalApplicationsCommandExecuter(command);
+            return results;
+        }
+
     }
 }

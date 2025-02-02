@@ -58,6 +58,12 @@
     <Compile Include="Applications\Applications_Types\ShowApplicationsTypes.Designer.cs">
       <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.Designer.cs">
+      <DependentUpon>ShowLocalDrivingLicenseApplications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\LocalLicense\AddLocalLicensApplication.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +155,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Applications\Applications_Types\ShowApplicationsTypes.resx">
       <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.resx">
+      <DependentUpon>ShowLocalDrivingLicenseApplications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\AddLocalLicensApplication.resx">
       <DependentUpon>AddLocalLicensApplication.cs</DependentUpon>
@@ -348,6 +357,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Prev 32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Applications.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New Application 64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

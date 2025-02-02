@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//notes:
+//applications status : 1-new 2-canceled 3-completed
+
 namespace DVLD_DataAccessTier
 {
     public class clsSettings

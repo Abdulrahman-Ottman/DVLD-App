@@ -93,6 +93,24 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable GenerateLocalApplicationsDataTable()
+        {
+            DataTable results = new DataTable();
+
+            results.Columns.Add("ApplicationID", typeof(int));
+            results.Columns.Add("LicenseClass", typeof(string));
+            results.Columns.Add("NationalNumber", typeof(string));
+            results.Columns.Add("FullName", typeof(string));
+            results.Columns.Add("ApplicationDate", typeof(DateTime));
+            results.Columns.Add("PassedTests", typeof(int));
+            results.Columns.Add("Status", typeof(string));
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["ApplicationID"];
+            results.PrimaryKey = keyColumns;
+
+            return results;
+        }
 
 
         //Command Executers
@@ -253,6 +271,44 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable LocalApplicationsCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateLocalApplicationsDataTable();
+
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["ApplicationID"],
+                          reader["ClassName"],
+                          reader["NationalNo"],
+                          String.Join(" ", reader["FirstName"].ToString(),
+                               reader["SecondName"].ToString(),
+                               reader["ThirdName"].ToString(),
+                               reader["LastName"].ToString()),
+                          reader["ApplicationDate"],
+                          0,
+                          StatusToString(int.Parse(reader["ApplicationStatus"].ToString()))
+
+                      );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return results;
+        }
 
         static public bool NonQueryCommandExecuter(SqlCommand command)
         {
@@ -372,6 +428,24 @@ namespace DVLD_DataAccessTier
             
              return fees;
             
+        }
+
+
+        static public string StatusToString(int statusNumber)
+        {
+            string statusName = "";
+            switch (statusNumber) {
+                case 1:
+                    statusName = "New";
+                    break;
+                case 2:
+                    statusName = "Canceled";
+                    break;
+                case 3:
+                    statusName = "Completed";
+                    break;
+            }
+            return statusName;
         }
     }
 }
