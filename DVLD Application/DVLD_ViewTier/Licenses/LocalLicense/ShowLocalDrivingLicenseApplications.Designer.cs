@@ -36,6 +36,7 @@
             this.lbRecords = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbFilters = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvApplications)).BeginInit();
             this.SuspendLayout();
@@ -72,9 +73,13 @@
             // 
             // dgvApplications
             // 
+            this.dgvApplications.AllowUserToAddRows = false;
+            this.dgvApplications.AllowUserToDeleteRows = false;
+            this.dgvApplications.AllowUserToOrderColumns = true;
             this.dgvApplications.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvApplications.Location = new System.Drawing.Point(7, 233);
+            this.dgvApplications.Location = new System.Drawing.Point(12, 233);
             this.dgvApplications.Name = "dgvApplications";
+            this.dgvApplications.ReadOnly = true;
             this.dgvApplications.Size = new System.Drawing.Size(787, 183);
             this.dgvApplications.TabIndex = 3;
             // 
@@ -111,16 +116,34 @@
             // 
             this.cmbFilters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFilters.FormattingEnabled = true;
+            this.cmbFilters.Items.AddRange(new object[] {
+            "None",
+            "ApplicationID",
+            "FullName",
+            "NationalNumber",
+            "Status"});
             this.cmbFilters.Location = new System.Drawing.Point(84, 206);
             this.cmbFilters.Name = "cmbFilters";
             this.cmbFilters.Size = new System.Drawing.Size(154, 21);
             this.cmbFilters.TabIndex = 7;
+            this.cmbFilters.SelectedIndexChanged += new System.EventHandler(this.cmbFilters_SelectedIndexChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(700, 422);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "close";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ShowLocalDrivingLicenseApplications
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.cmbFilters);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbRecords);
@@ -130,6 +153,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Name = "ShowLocalDrivingLicenseApplications";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ShowLocalDrivingLicenseApplications";
             this.Load += new System.EventHandler(this.ShowLocalDrivingLicenseApplications_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -149,5 +173,6 @@
         private System.Windows.Forms.Label lbRecords;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbFilters;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -19,5 +19,10 @@ namespace DVLD_BusinessTier
         {
             return clsApplication.GetAllLocalApplications();
         }
+
+        public static DataTable GetLocalApplicationsOnFilter(string filter , string value)
+        {
+            return clsApplication.GetLocalApplicationsOnFilter(filter,value);
+        }
     }
 }
