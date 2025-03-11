@@ -29,3 +29,5 @@ C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Test
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Licenses.LocalLicense.AddLocalLicensApplication.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.PersonInfoViewerWithFilters.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Applications.LocalLicenseApplications.ShowLocalDrivingLicenseApplications.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Tests.TestAppointments.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Tests.AddAppointment.resources

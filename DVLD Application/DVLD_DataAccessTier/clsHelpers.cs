@@ -429,8 +429,63 @@ namespace DVLD_DataAccessTier
              return fees;
             
         }
+        static public int getLocalApplicationIdByApplicationID(int applicationID)
+        {
+            int result = -1;
+            string query = @"SELECT   Applications.ApplicationID,LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID
+                    FROM 
+                            Applications 
+                    INNER JOIN
+                         LocalDrivingLicenseApplications ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID
+                    WHERE Applications.ApplicationID = @applicationID";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@applicationID" , applicationID);
 
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    result = (int)reader["LocalDrivingLicenseApplicationID"]; 
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+            return result;
+        }
+        static public float getTestTypeFeesByID(int TestTypeID)
+        {
+            float result = -1;
+            string query = @"SELECT 
+                  TestTypeFees
+                  FROM TestTypes
+                   Where TestTypeID = @id";
+            SqlCommand command = new SqlCommand(query,clsSettings.connection);
+            command.Parameters.AddWithValue("@id",TestTypeID);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    result = Convert.ToSingle(reader["TestTypeFees"]);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally { clsSettings.connection.Close(); }
+            return result;
+        }
         static public string StatusToString(int statusNumber)
         {
             string statusName = "";

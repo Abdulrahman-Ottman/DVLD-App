@@ -24,5 +24,19 @@ namespace DVLD_BusinessTier
         {
             return clsApplication.GetLocalApplicationsOnFilter(filter,value);
         }
+        public static Dictionary<int, bool> getApplicationPassedTests(string id)
+        {
+            return clsApplication.getApplicationPassedTests(id);
+        }
+
+        public static DataTable GetTestAppointments(string TestTypeID,string applicationID)
+        {
+            return clsApplication.GetTestAppointments(TestTypeID, applicationID);
+        }
+        public static bool saveTestAppointment(int testTypeID, DateTime date, int applicationID, float paidFees)
+        {
+            return clsApplication.saveTestAppointment(testTypeID, date, applicationID, paidFees);
+        }
+
     }
 }

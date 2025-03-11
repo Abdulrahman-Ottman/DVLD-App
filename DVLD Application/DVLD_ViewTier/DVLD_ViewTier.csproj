@@ -114,6 +114,12 @@
     <Compile Include="PersonInfoViewer.Designer.cs">
       <DependentUpon>PersonInfoViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tests\AddAppointment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tests\AddAppointment.Designer.cs">
+      <DependentUpon>AddAppointment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tests\EditTestsTypes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +131,12 @@
     </Compile>
     <Compile Include="Tests\ShowTestsTypes.Designer.cs">
       <DependentUpon>ShowTestsTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\TestAppointments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tests\TestAppointments.Designer.cs">
+      <DependentUpon>TestAppointments.cs</DependentUpon>
     </Compile>
     <Compile Include="Users\AddUser.cs">
       <SubType>Form</SubType>
@@ -193,11 +205,17 @@
     <EmbeddedResource Include="PersonInfoViewer.resx">
       <DependentUpon>PersonInfoViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tests\AddAppointment.resx">
+      <DependentUpon>AddAppointment.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tests\EditTestsTypes.resx">
       <DependentUpon>EditTestsTypes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tests\ShowTestsTypes.resx">
       <DependentUpon>ShowTestsTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tests\TestAppointments.resx">
+      <DependentUpon>TestAppointments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Users\AddUser.resx">
       <DependentUpon>AddUser.cs</DependentUpon>

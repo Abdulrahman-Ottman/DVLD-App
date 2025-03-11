@@ -101,7 +101,6 @@ FROM                     Applications INNER JOIN
             DataTable results = new DataTable();
             string query = GetAllLocalApplicationsJoinQuery;
         
-
             SqlCommand command = new SqlCommand(query, clsSettings.connection);
             results = clsHelpers.LocalApplicationsCommandExecuter(command);
             return results;
@@ -145,8 +144,153 @@ FROM                     Applications INNER JOIN
             SqlCommand command = new SqlCommand(query, clsSettings.connection);
             command.Parameters.AddWithValue(parameterName, value);
             return clsHelpers.LocalApplicationsCommandExecuter(command);
-
         }
+        public static Dictionary<int , bool> getApplicationPassedTests(string id)
+        {
+            Dictionary<int,bool> passedTests = new Dictionary<int,bool>();
+            string query = @"SELECT        LocalDrivingLicenseApplications.ApplicationID, TestAppointments.TestTypeID, TestAppointments.TestAppointmentID, Tests.TestResult, LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID
+                   FROM 
+                         LocalDrivingLicenseApplications
+                   INNER JOIN
+                         TestAppointments ON LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID = TestAppointments.LocalDrivingLicenseApplicationID
+                    INNER JOIN
+                         Tests ON TestAppointments.TestAppointmentID = Tests.TestAppointmentID
+                    WHERE ApplicationID=@id";
+            SqlCommand command = new SqlCommand(query,clsSettings.connection);
+            command.Parameters.AddWithValue ("@id", id);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while(reader.Read())
+                {
+                    if ((bool)reader["TestResult"])
+                    {
+                       
+                        if (passedTests.ContainsKey((int)reader["TestTypeID"]))
+                        {
+                            continue;
+                        }
+                        passedTests.Add((int)reader["TestTypeID"], (bool)reader["TestResult"]);
+                    }
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return passedTests;
+        }
+        public static DataTable GetTestAppointments(string TestTypeID,string applicationID)
+        {
+            string query = @"SELECT
+                       LocalDrivingLicenseApplications.ApplicationID, TestAppointments.TestTypeID, TestAppointments.TestAppointmentID, TestAppointments.AppointmentDate, TestAppointments.PaidFees, TestAppointments.CreatedByUserID, 
+                                        TestAppointments.IsLocked
+                    FROM
+                        LocalDrivingLicenseApplications
+                INNER JOIN
+                TestAppointments ON LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID = TestAppointments.LocalDrivingLicenseApplicationID 
+                 WHERE LocalDrivingLicenseApplications.ApplicationID = @id and TestTypeID = @TestTypeID";
+            SqlCommand command = new SqlCommand (query,clsSettings.connection);
+            command.Parameters.AddWithValue("@id",applicationID);
+            command.Parameters.AddWithValue("@TestTypeID", TestTypeID);
+            DataTable results = new DataTable();
+            results.Columns.Add("AppointmentID", typeof(int));
+            results.Columns.Add("AppointmentDate", typeof(DateTime));
+            results.Columns.Add("PaidFees", typeof(float));
+            results.Columns.Add("IsLocked", typeof(bool));
+
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                           reader["TestAppointmentID"],
+                           reader["AppointmentDate"],
+                           reader["PaidFees"],
+                           reader["IsLocked"]
+                       );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return results;
+        }
+        public static bool saveTestAppointment(int testTypeID,DateTime date,int applicationID , float paidFees)
+        {
+
+            //check if the date is unique for the current test Type and application
+            //check if there is no other non-locked test from the same type
+
+            /*
+                1-get all the test appointment that have the applicationID
+                2-check for the tow cases
+            */
+            string query1 = @"SELECT        TestAppointments.AppointmentDate, TestAppointments.TestTypeID, TestAppointments.IsLocked, LocalDrivingLicenseApplications.ApplicationID
+                FROM 
+                    LocalDrivingLicenseApplications
+                INNER JOIN
+                         TestAppointments ON LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID = TestAppointments.LocalDrivingLicenseApplicationID
+                Where ApplicationID = @applicationID";
+            using(SqlCommand command1 = new SqlCommand(query1, clsSettings.connection))
+            {
+                command1.Parameters.AddWithValue("@applicationID",applicationID);
+                try
+                {
+                    clsSettings.connection.Open();
+                    SqlDataReader reader = command1.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        if (((DateTime)reader["AppointmentDate"] == date || (int)reader["TestTypeID"]==testTypeID) && !(bool)reader["IsLocked"])
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    clsSettings.connection.Close();
+                }
+            }
+
+
+            string query = @"INSERT INTO TestAppointments (TestTypeID,LocalDrivingLicenseApplicationID,AppointmentDate,PaidFees,CreatedByUserID,IsLocked)
+                            Values
+                             (@TestTypeID , @localLicenseApplicationID,@AppointmentDate,@PaidFees,@CreatedBy,0)";
+            int LDL_ID = clsHelpers.getLocalApplicationIdByApplicationID(applicationID);
+            if (LDL_ID > -1)
+            {
+                SqlCommand command = new SqlCommand(query, clsSettings.connection);
+                command.Parameters.AddWithValue("@TestTypeID", testTypeID);
+                command.Parameters.AddWithValue("@localLicenseApplicationID", LDL_ID);
+                command.Parameters.AddWithValue("@AppointmentDate", date);
+                command.Parameters.AddWithValue("@PaidFees", paidFees);
+                command.Parameters.AddWithValue("@CreatedBy", clsSettings.currentUser.UserId);
+                return clsHelpers.NonQueryCommandExecuter(command);
+            }
+            return false;
+        }
     }
 }

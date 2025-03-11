@@ -1,6 +1,9 @@
 ﻿using DVLD_BusinessTier;
 using DVLD_ViewTier.Licenses.LocalLicense;
+using DVLD_ViewTier.People;
+using DVLD_ViewTier.Tests;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -47,6 +50,9 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
             LoadDataToGridView();
 
             lbRecords.Text = $"{applications.Rows.Count}";
+
+
+            
         }
 
         private void LoadDataToGridView()
@@ -157,6 +163,76 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
                 applications = ApplicationController.GetLocalApplicationsOnFilter("Status", selectedGender.Value.ToString());
             }
             LoadDataToGridView();
+        }
+
+        private void dgvApplications_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Get the row index of the row that was clicked
+                var hitTestInfo = dgvApplications.HitTest(e.X, e.Y);
+
+                // Check if the click was on a row
+                if (hitTestInfo.RowIndex >= 0)
+                {
+                    // Select the clicked row
+                    dgvApplications.ClearSelection();
+                    dgvApplications.Rows[hitTestInfo.RowIndex].Selected = true;
+
+                    // Optionally, set the current cell if needed
+                    dgvApplications.CurrentCell = dgvApplications.Rows[hitTestInfo.RowIndex].Cells[0];
+                }
+            }
+            
+                string id = (dgvApplications.CurrentRow.Cells[0].Value).ToString();
+                Dictionary<int, bool> passedTests = ApplicationController.getApplicationPassedTests(id);
+            switch (passedTests.Count)
+            {
+                case 0:
+                    scheduleVisionTestToolStripMenuItem.Enabled = true;
+                    scheduleWrittenTestToolStripMenuItem.Enabled = false;
+                    scheduleStreetTestToolStripMenuItem.Enabled = false;
+
+                    break;
+                case 1:
+                    scheduleVisionTestToolStripMenuItem.Enabled = false;
+                    scheduleWrittenTestToolStripMenuItem.Enabled = true;
+                    scheduleStreetTestToolStripMenuItem.Enabled = false;
+                    break;
+                case 2:
+                    scheduleVisionTestToolStripMenuItem.Enabled = false;
+                    scheduleWrittenTestToolStripMenuItem.Enabled = false;
+                    scheduleStreetTestToolStripMenuItem.Enabled = true;
+                    break;
+                default:
+                    scheduleVisionTestToolStripMenuItem.Enabled = false;
+                    scheduleWrittenTestToolStripMenuItem.Enabled = false;
+                    scheduleStreetTestToolStripMenuItem.Enabled = false;
+                    break;
+
+            }
+        }
+
+        private void dgvApplications_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvApplications.IsCurrentCellDirty && dgvApplications.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvApplications.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void scheduleVisionTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            TestAppointments testAppointments = new TestAppointments(1,id);
+            testAppointments.Show();
+        }
+
+        private void scheduleWrittenTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            TestAppointments testAppointments = new TestAppointments(2, id);
+            testAppointments.Show();
         }
     }
 }

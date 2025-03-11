@@ -188,5 +188,9 @@ namespace DVLD_BusinessTier
             return clsHelpers.GetApplicationTypeFeesByID(id);   
         }
 
+        static public float getTestTypeFeesByID(int TestTypeID)
+        {
+            return clsHelpers.getTestTypeFeesByID(TestTypeID);
+        }
     }
 }
