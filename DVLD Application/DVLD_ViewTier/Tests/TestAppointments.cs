@@ -20,7 +20,16 @@ namespace DVLD_ViewTier.Tests
             ApplicationID = applicationID;
             appointments = ApplicationController.GetTestAppointments(TestTypeID.ToString(),ApplicationID.ToString());
         }
+        private void reFetchData()
+        {
+            appointments = ApplicationController.GetTestAppointments(TestTypesID.ToString(),ApplicationID.ToString());
+            LoadDataToGridView();
+        }
 
+        private void LoadDataToGridView()
+        {
+            dgvTestAppointments.DataSource = appointments;
+        }
         private void TestAppointments_Load(object sender, EventArgs e)
         {
             string title = "";
@@ -45,12 +54,9 @@ namespace DVLD_ViewTier.Tests
             lblMyLabel.ForeColor = Color.Red;
             this.Controls.Add(lblMyLabel);
 
-           dgvTestAppointments.DataSource = appointments;
 
             dgvTestAppointments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-
-            dgvTestAppointments.DataSource = appointments;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -62,7 +68,47 @@ namespace DVLD_ViewTier.Tests
         {
             AddAppointment addAppointment =  new AddAppointment(TestTypesID,ApplicationID);
             addAppointment.ShowDialog();
+        }
 
+        private void takeTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvTestAppointments.CurrentRow.Cells[0].Value);
+            TakeTest takeTest = new TakeTest(id);
+            takeTest.ShowDialog();
+        }
+        private void dgvTestAppointments_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Get the row index of the row that was clicked
+                var hitTestInfo = dgvTestAppointments.HitTest(e.X, e.Y);
+
+                // Check if the click was on a row
+                if (hitTestInfo.RowIndex >= 0)
+                {
+                    // Select the clicked row
+                    dgvTestAppointments.ClearSelection();
+                    dgvTestAppointments.Rows[hitTestInfo.RowIndex].Selected = true;
+
+                    // Optionally, set the current cell if needed
+                    dgvTestAppointments.CurrentCell = dgvTestAppointments.Rows[hitTestInfo.RowIndex].Cells[0];
+                }
+            }
+         
+
+         
+        }
+        private void dgvTestAppointments_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvTestAppointments.IsCurrentCellDirty && dgvTestAppointments.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                dgvTestAppointments.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            reFetchData();
         }
     }
 }

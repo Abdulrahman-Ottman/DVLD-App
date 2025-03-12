@@ -290,7 +290,7 @@ namespace DVLD_DataAccessTier
                                reader["ThirdName"].ToString(),
                                reader["LastName"].ToString()),
                           reader["ApplicationDate"],
-                          0,
+                          getNumberOfPassedTestes((int)reader["ApplicationID"]),
                           StatusToString(int.Parse(reader["ApplicationStatus"].ToString()))
 
                       );
@@ -501,6 +501,25 @@ namespace DVLD_DataAccessTier
                     break;
             }
             return statusName;
+        }
+
+        static public int getNumberOfPassedTestes(int LocalLicenseApplicationID)
+        {
+            string query = @" SELECT COUNT(*) 
+        FROM Tests 
+        INNER JOIN TestAppointments 
+            ON Tests.TestAppointmentID = TestAppointments.TestAppointmentID 
+        INNER JOIN LocalDrivingLicenseApplications 
+            ON TestAppointments.LocalDrivingLicenseApplicationID = LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID 
+        WHERE ApplicationID = @ApplicationID AND TestResult = 1";
+  
+                using (SqlCommand command = new SqlCommand(query, clsSettings.connection))
+                {
+                    command.Parameters.AddWithValue("@ApplicationID", LocalLicenseApplicationID);
+                    int recordCount = (int)command.ExecuteScalar();
+                    return recordCount;
+                }
+            
         }
     }
 }

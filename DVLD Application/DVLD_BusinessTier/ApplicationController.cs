@@ -37,6 +37,10 @@ namespace DVLD_BusinessTier
         {
             return clsApplication.saveTestAppointment(testTypeID, date, applicationID, paidFees);
         }
+        public static bool TakeTest(int TestAppointmentID, bool TestResult, string Notes)
+        {
+            return clsApplication.TakeTest(TestAppointmentID,TestResult,Notes);
+        }
 
     }
 }

@@ -24,7 +24,11 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
         {
             InitializeComponent();
         }
-
+        private void reFetchData()
+        {
+            applications=ApplicationController.GetAllLocalApplications();
+            LoadDataToGridView();
+        }
         private void ShowLocalDrivingLicenseApplications_Load(object sender, EventArgs e)
         {
             //cmbFilters.SelectedIndex = 0;
@@ -211,6 +215,12 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
                     break;
 
             }
+            if (dgvApplications.CurrentRow.Cells[6].Value.ToString() == "Canceled")
+            {
+                scheduleVisionTestToolStripMenuItem.Enabled = false;
+                scheduleWrittenTestToolStripMenuItem.Enabled = false;
+                scheduleStreetTestToolStripMenuItem.Enabled = false;
+            }
         }
 
         private void dgvApplications_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -233,6 +243,18 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
             int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
             TestAppointments testAppointments = new TestAppointments(2, id);
             testAppointments.Show();
+        }
+
+        private void scheduleStreetTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            TestAppointments testAppointments = new TestAppointments(3, id);
+            testAppointments.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            reFetchData();
         }
     }
 }

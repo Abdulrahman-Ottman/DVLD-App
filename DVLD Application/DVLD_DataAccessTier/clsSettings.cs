@@ -12,7 +12,7 @@ namespace DVLD_DataAccessTier
 {
     public class clsSettings
     {
-        public static string connectionString { get; set; } = "Server=.;Database=DVLD;User Id=sa;Password=abood";
+        public static string connectionString { get; set; } = "Server=.;Database=DVLD;User Id=sa;Password=abood;MultipleActiveResultSets=True;";
         public static SqlConnection connection { get; set; } = new SqlConnection(connectionString);
         public static clsUser currentUser { get; set; }
     }

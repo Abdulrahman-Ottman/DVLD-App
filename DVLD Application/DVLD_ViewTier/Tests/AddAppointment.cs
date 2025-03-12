@@ -21,7 +21,7 @@ namespace DVLD_ViewTier.Tests
             this.ApplicationID = ApplicationID;
             InitializeComponent();
         }
-
+      
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -33,11 +33,13 @@ namespace DVLD_ViewTier.Tests
             if (ApplicationController.saveTestAppointment(TestTypeID, dateTimePicker1.Value, ApplicationID, paidFees))
             {
                 MessageBox.Show("Appointment Saved Successfully");
+                this.Close();
             }
             else
             {
-                MessageBox.Show("Failed to save the appointment");
+                MessageBox.Show("Failed to save the appointment" ,"Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
 
         private void AddAppointment_Load(object sender, EventArgs e)
