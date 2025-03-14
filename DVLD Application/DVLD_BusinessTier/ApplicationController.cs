@@ -41,6 +41,17 @@ namespace DVLD_BusinessTier
         {
             return clsApplication.TakeTest(TestAppointmentID,TestResult,Notes);
         }
-
+        public static bool IssueLocalDrivingLicense(int applicationID, string notes)
+        {
+            return clsApplication.IssueLocalDrivingLicense(applicationID, notes);
+        }
+        public static bool deleteApplication(int applicationID)
+        {
+            return clsApplication.deleteApplication(applicationID);
+        }
+        public static bool cancelApplication(int applicationID)
+        {
+            return clsApplication.cancelApplication(applicationID);
+        }
     }
 }

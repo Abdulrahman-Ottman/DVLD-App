@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DVLD_DataAccessTier
 {
@@ -337,6 +338,137 @@ FROM                     Applications INNER JOIN
             }
 
             return result;
+        }
+
+        public static bool IssueLocalDrivingLicense(int applicationID,string notes)
+        {
+            bool result = false;    
+            //1-prepare the data needed to create the license
+            string query = @"SELECT        LicenseClasses.LicenseClassID,LicenseClasses.ClassFees, Applications.ApplicantPersonID, Applications.ApplicationTypeID, LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID
+                        FROM
+                        Applications INNER JOIN
+                         LocalDrivingLicenseApplications ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID INNER JOIN
+                         LicenseClasses ON LocalDrivingLicenseApplications.LicenseClassID = LicenseClasses.LicenseClassID Where Applications.ApplicationID = @applicationID";
+
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@applicationID", applicationID);
+            int LicenseClassID = -1;
+            int PersonID = -1;
+            int driverID = -1;
+            float paidFees = 0;
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    LicenseClassID =  (int)reader["LicenseClassID"];
+                    paidFees = Convert.ToSingle(reader["ClassFees"]);
+                    PersonID = (int)reader["ApplicantPersonID"];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+            //2-create the driver entry
+            if(PersonID > 0 && LicenseClassID > 0)
+            {
+                string query1 = @"INSERT INTO Drivers (PersonID,CreatedByUserID,CreatedDate)
+                              Values (@personID,@CreatedByUser,@CreatedDate)
+                            SELECT CAST(SCOPE_IDENTITY() AS int)";
+                SqlCommand command1 = new SqlCommand(query1, clsSettings.connection);
+                command1.Parameters.AddWithValue("@personID", PersonID);
+                command1.Parameters.AddWithValue("@CreatedByUser", clsSettings.currentUser.UserId);
+                command1.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                try
+                {
+                    clsSettings.connection.Open();
+                    driverID = (int)command1.ExecuteScalar();
+                }
+                catch (Exception ex) {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    clsSettings.connection.Close();
+                }
+            
+
+            }
+            //3-create the license entry
+            if (driverID > 0)
+            {
+                string query2 = @"INSERT INTO Licenses
+                        (ApplicationID,DriverID,LicenseCLass,IssueDate,ExpirationDate,Notes,PaidFees,IsActive,IssueReason,CreatedByUserID)
+                        Values
+                        (@ApplicationID,@DriverID,@LicenseCLass,@IssueDate,@ExpirationDate,@Notes,@PaidFees,@IsActive,@IssueReason,@CreatedByUserID)";
+                SqlCommand command2 = new SqlCommand(query2, clsSettings.connection);
+                command2.Parameters.AddWithValue("@ApplicationID", applicationID);
+                command2.Parameters.AddWithValue("@DriverID", driverID);
+                command2.Parameters.AddWithValue("@LicenseCLass", LicenseClassID);
+                command2.Parameters.AddWithValue("@IssueDate", DateTime.Now);
+                command2.Parameters.AddWithValue("@ExpirationDate", DateTime.Now.AddYears(10));
+                command2.Parameters.AddWithValue("@Notes", notes);
+                command2.Parameters.AddWithValue("@PaidFees", paidFees);
+                command2.Parameters.AddWithValue("@IsActive", true);
+                command2.Parameters.AddWithValue("@IssueReason", 0);
+                command2.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
+                result = clsHelpers.NonQueryCommandExecuter(command2);
+            }
+            //4-change the application status to completed
+            if (result)
+            {
+                string query3 = @"UPDATE Applications  
+                        SET ApplicationStatus = 3  
+                        WHERE ApplicationID = @ApplicationID;";
+                SqlCommand command3 = new SqlCommand(query3, clsSettings.connection);
+                command3.Parameters.AddWithValue("@ApplicationID",applicationID);
+                result = clsHelpers.NonQueryCommandExecuter(command3);
+            }
+
+            return result;
+        }
+        public static bool deleteApplication(int applicationID)
+        {
+            string query = @"
+        DELETE FROM Tests 
+        WHERE TestAppointmentId IN 
+            (SELECT TestAppointmentId FROM TestAppointments 
+             WHERE LocalDrivingLicenseApplicationId IN 
+                (SELECT LocalDrivingLicenseApplicationId FROM LocalDrivingLicenseApplications 
+                 WHERE ApplicationId = @appId));
+
+        DELETE FROM TestAppointments 
+        WHERE LocalDrivingLicenseApplicationId IN 
+            (SELECT LocalDrivingLicenseApplicationId FROM LocalDrivingLicenseApplications 
+             WHERE ApplicationId = @appId);
+
+        DELETE FROM LocalDrivingLicenseApplications 
+        WHERE ApplicationId = @appId;
+
+        DELETE FROM Applications WHERE ApplicationId = @appId;
+        ";
+        SqlCommand command = new SqlCommand(query, clsSettings.connection);
+        command.Parameters.AddWithValue("@appID",applicationID);
+        return clsHelpers.NonQueryCommandExecuter(command);
+
+        }
+        public static bool cancelApplication(int applicationID)
+        {
+            string query = @"UPDATE Applications  
+                        SET ApplicationStatus = 2  
+                        WHERE ApplicationID = @ApplicationID;";
+            using (SqlCommand command = new SqlCommand(query, clsSettings.connection)) {
+                command.Parameters.AddWithValue("@ApplicationID",applicationID);
+                return clsHelpers.NonQueryCommandExecuter(command);
+            }
         }
     }
 }

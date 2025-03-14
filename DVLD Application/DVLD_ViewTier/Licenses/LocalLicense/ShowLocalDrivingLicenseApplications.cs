@@ -15,6 +15,8 @@ using System.Windows.Forms;
 
 namespace DVLD_ViewTier.Applications.LocalLicenseApplications
 {
+
+    //note : edit application functionality is not implemented yet
     public partial class ShowLocalDrivingLicenseApplications : Form
     {
         DataTable applications = ApplicationController.GetAllLocalApplications();
@@ -190,6 +192,13 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
             
                 string id = (dgvApplications.CurrentRow.Cells[0].Value).ToString();
                 Dictionary<int, bool> passedTests = ApplicationController.getApplicationPassedTests(id);
+
+
+            //change enable status to true then check the condition , so the previous select does not effect the current one
+            deleteApplicationToolStripMenuItem.Enabled = true;
+            cancelApplicationToolStripMenuItem.Enabled = true;
+            editApplicationToolStripMenuItem.Enabled = true;
+            scheduleATestToolStripMenuItem.Enabled = true;
             switch (passedTests.Count)
             {
                 case 0:
@@ -209,17 +218,39 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
                     scheduleStreetTestToolStripMenuItem.Enabled = true;
                     break;
                 default:
-                    scheduleVisionTestToolStripMenuItem.Enabled = false;
-                    scheduleWrittenTestToolStripMenuItem.Enabled = false;
-                    scheduleStreetTestToolStripMenuItem.Enabled = false;
+                    scheduleATestToolStripMenuItem.Enabled = false;
                     break;
 
             }
+    
+
+            if (dgvApplications.CurrentRow.Cells[6].Value.ToString() == "Completed")
+            {
+                editApplicationToolStripMenuItem.Enabled = false;
+                deleteApplicationToolStripMenuItem.Enabled = false;
+                cancelApplicationToolStripMenuItem.Enabled = false;
+                scheduleATestToolStripMenuItem.Enabled = false;
+                issueDrivingLicenseToolStripMenuItem.Enabled = false;
+                showLicenseToolStripMenuItem.Enabled = true;
+            }
+            if ((int)dgvApplications.CurrentRow.Cells[5].Value == 3 && dgvApplications.CurrentRow.Cells[6].Value.ToString() == "New")
+            {
+                scheduleATestToolStripMenuItem.Enabled= false;
+                issueDrivingLicenseToolStripMenuItem.Enabled= true;
+            }
+            else
+            {
+                issueDrivingLicenseToolStripMenuItem.Enabled = false;
+            }
+
             if (dgvApplications.CurrentRow.Cells[6].Value.ToString() == "Canceled")
             {
-                scheduleVisionTestToolStripMenuItem.Enabled = false;
-                scheduleWrittenTestToolStripMenuItem.Enabled = false;
-                scheduleStreetTestToolStripMenuItem.Enabled = false;
+                scheduleATestToolStripMenuItem.Enabled = false;
+                deleteApplicationToolStripMenuItem.Enabled = false;
+                cancelApplicationToolStripMenuItem.Enabled = false;
+                editApplicationToolStripMenuItem.Enabled = false;
+                issueDrivingLicenseToolStripMenuItem.Enabled = false;
+                showLicenseToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -255,6 +286,44 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
         private void button2_Click(object sender, EventArgs e)
         {
             reFetchData();
+        }
+
+        private void issueDrivingLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            IssueLocalDrivingLicense issueLocal = new IssueLocalDrivingLicense(id);
+            issueLocal.ShowDialog();
+        }
+
+        private void deleteApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            if (ApplicationController.deleteApplication(id))
+            {
+                MessageBox.Show("Application deleted successfully");
+            }
+            else
+            {
+                MessageBox.Show("Failed to delete the Application");
+            }
+        }
+
+        private void cancelApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            if (ApplicationController.cancelApplication(id))
+            {
+                MessageBox.Show("Application canceled successfully");
+            }
+            else
+            {
+                MessageBox.Show("Failed to cancel the Application");
+            }
+        }
+
+        private void editApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("not implemented yet");
         }
     }
 }

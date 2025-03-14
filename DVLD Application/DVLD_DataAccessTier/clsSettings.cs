@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 //notes:
 //applications status : 1-new 2-canceled 3-completed
-
+//Do delegates for forms with refresh buttons :)
 namespace DVLD_DataAccessTier
 {
     public class clsSettings

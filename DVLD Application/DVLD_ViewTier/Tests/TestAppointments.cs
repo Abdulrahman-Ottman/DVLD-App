@@ -56,7 +56,7 @@ namespace DVLD_ViewTier.Tests
 
 
             dgvTestAppointments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
+            LoadDataToGridView();
         }
 
         private void btnClose_Click(object sender, EventArgs e)

@@ -58,6 +58,12 @@
     <Compile Include="Applications\Applications_Types\ShowApplicationsTypes.Designer.cs">
       <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Licenses\LocalLicense\IssueLocalDrivingLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\LocalLicense\IssueLocalDrivingLicense.Designer.cs">
+      <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +179,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Applications\Applications_Types\ShowApplicationsTypes.resx">
       <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\LocalLicense\IssueLocalDrivingLicense.resx">
+      <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.resx">
       <DependentUpon>ShowLocalDrivingLicenseApplications.cs</DependentUpon>
