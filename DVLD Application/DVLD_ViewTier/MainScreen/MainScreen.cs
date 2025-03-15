@@ -1,6 +1,7 @@
 ﻿using DVLD_BusinessTier;
 using DVLD_ViewTier.Applications.Applications_Types;
 using DVLD_ViewTier.Applications.LocalLicenseApplications;
+using DVLD_ViewTier.Drivers;
 using DVLD_ViewTier.Licenses.LocalLicense;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,12 @@ namespace DVLD_ViewTier.MainScreen
         {
             ShowLocalDrivingLicenseApplications localApplications = new ShowLocalDrivingLicenseApplications();
             localApplications.Show();
+        }
+
+        private void tsmDrivers_Click(object sender, EventArgs e)
+        {
+            ShowDrivers showDrivers = new ShowDrivers();
+            showDrivers.Show();
         }
     }
 }

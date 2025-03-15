@@ -385,25 +385,52 @@ FROM            Applications INNER JOIN
             //2-create the driver entry
             if(PersonID > 0 && LicenseClassID > 0)
             {
-                string query1 = @"INSERT INTO Drivers (PersonID,CreatedByUserID,CreatedDate)
-                              Values (@personID,@CreatedByUser,@CreatedDate)
-                            SELECT CAST(SCOPE_IDENTITY() AS int)";
-                SqlCommand command1 = new SqlCommand(query1, clsSettings.connection);
-                command1.Parameters.AddWithValue("@personID", PersonID);
-                command1.Parameters.AddWithValue("@CreatedByUser", clsSettings.currentUser.UserId);
-                command1.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
-                try
+                //check if the driver is already exist (has a license befor so it has been created)
+                string checkIfDriversExist = @"SELECT COUNT(*) 
+                    FROM Drivers  
+                    WHERE PersonID = @PersonID;";
+                int countOfDriversWithPersonID = 0;
+                using (SqlCommand cmd = new SqlCommand(checkIfDriversExist, clsSettings.connection))
                 {
                     clsSettings.connection.Open();
-                    driverID = (int)command1.ExecuteScalar();
-                }
-                catch (Exception ex) {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
-                finally
-                {
+                    cmd.Parameters.AddWithValue("@PersonID",PersonID);
+                    countOfDriversWithPersonID = (int)cmd.ExecuteScalar();
                     clsSettings.connection.Close();
+                }
+                if (countOfDriversWithPersonID == 0)
+                {
+                    string query1 = @"INSERT INTO Drivers (PersonID,CreatedByUserID,CreatedDate)
+                              Values (@personID,@CreatedByUser,@CreatedDate)
+                            SELECT CAST(SCOPE_IDENTITY() AS int)";
+                    SqlCommand command1 = new SqlCommand(query1, clsSettings.connection);
+                    command1.Parameters.AddWithValue("@personID", PersonID);
+                    command1.Parameters.AddWithValue("@CreatedByUser", clsSettings.currentUser.UserId);
+                    command1.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                    try
+                    {
+                        clsSettings.connection.Open();
+                        driverID = (int)command1.ExecuteScalar();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return false;
+                    }
+                    finally
+                    {
+                        clsSettings.connection.Close();
+                    }
+                }
+                else
+                {
+                    string getDriverIDQuery = "Select DriverID from Drivers Where PersonID = @PersonID";
+                    using (SqlCommand cmd1 = new SqlCommand(getDriverIDQuery, clsSettings.connection))
+                    {
+                        cmd1.Parameters.AddWithValue("@PersonID",PersonID);
+                        clsSettings.connection.Open();
+                        driverID = (int)cmd1.ExecuteScalar();
+                        clsSettings.connection.Close();
+                    }
                 }
             
 

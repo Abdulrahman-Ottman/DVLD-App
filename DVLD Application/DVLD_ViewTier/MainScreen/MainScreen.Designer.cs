@@ -42,6 +42,7 @@
             this.reToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.localDrigingLicenseApplicationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.detainLicenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -53,7 +54,6 @@
             this.tsmAccountSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.changePasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.localDrigingLicenseApplicationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -182,6 +182,13 @@
             this.tstToolStripMenuItem.Size = new System.Drawing.Size(277, 38);
             this.tstToolStripMenuItem.Text = "Manage Applications";
             // 
+            // localDrigingLicenseApplicationsToolStripMenuItem
+            // 
+            this.localDrigingLicenseApplicationsToolStripMenuItem.Name = "localDrigingLicenseApplicationsToolStripMenuItem";
+            this.localDrigingLicenseApplicationsToolStripMenuItem.Size = new System.Drawing.Size(306, 24);
+            this.localDrigingLicenseApplicationsToolStripMenuItem.Text = "Local Driging License Applications";
+            this.localDrigingLicenseApplicationsToolStripMenuItem.Click += new System.EventHandler(this.localDrigingLicenseApplicationsToolStripMenuItem_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -239,6 +246,7 @@
             this.tsmDrivers.Name = "tsmDrivers";
             this.tsmDrivers.Size = new System.Drawing.Size(93, 36);
             this.tsmDrivers.Text = "Drivers";
+            this.tsmDrivers.Click += new System.EventHandler(this.tsmDrivers_Click);
             // 
             // tsmUsers
             // 
@@ -279,13 +287,6 @@
             this.logoutToolStripMenuItem.Size = new System.Drawing.Size(187, 24);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
-            // 
-            // localDrigingLicenseApplicationsToolStripMenuItem
-            // 
-            this.localDrigingLicenseApplicationsToolStripMenuItem.Name = "localDrigingLicenseApplicationsToolStripMenuItem";
-            this.localDrigingLicenseApplicationsToolStripMenuItem.Size = new System.Drawing.Size(306, 24);
-            this.localDrigingLicenseApplicationsToolStripMenuItem.Text = "Local Driging License Applications";
-            this.localDrigingLicenseApplicationsToolStripMenuItem.Click += new System.EventHandler(this.localDrigingLicenseApplicationsToolStripMenuItem_Click);
             // 
             // MainScreen
             // 
