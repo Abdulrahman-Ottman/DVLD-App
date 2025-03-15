@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Data;
 using DVLD_DataAccessTier;
 
@@ -73,5 +74,24 @@ namespace DVLD_BusinessTier
         {
             return clsPerson.DeletePerson(personID);
         }
-    }
+        public static Dictionary<string, string> FindPersonByNationalNumber(string NationalNumber) {
+            clsPerson person =  clsPerson.FindPersonByNationalNumber(NationalNumber);
+            Dictionary<string,string> data = new Dictionary<string,string>();
+            data.Add("Id",person.Id.ToString());
+            data.Add("NationalNumber", person.NationalNumber.ToString());
+            data.Add("FirstName", person.FirstName.ToString());
+            data.Add("SecondName", person.SecondName.ToString());
+            data.Add("ThirdName", person.ThirdName.ToString());
+            data.Add("LastName", person.LastName.ToString());
+            data.Add("DateOfBirth", person.DateOfBirth.ToString());
+            data.Add("Gender", person.Gender.ToString());
+            data.Add("Address", person.Address.ToString());
+            data.Add("Phone", person.Phone.ToString());
+            data.Add("Email", person.Email.ToString());
+            data.Add("NationalityCountryID", person.NationalityCountryID.ToString());
+            data.Add("ImagePath", person.ImagePath.ToString());
+            data.Add("Created_by", person.Created_by.ToString());
+            return data;
+        }
+   }
 }

@@ -1,4 +1,5 @@
 ﻿using DVLD_BusinessTier;
+using DVLD_ViewTier.Licenses;
 using DVLD_ViewTier.Licenses.LocalLicense;
 using DVLD_ViewTier.People;
 using DVLD_ViewTier.Tests;
@@ -233,6 +234,10 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
                 issueDrivingLicenseToolStripMenuItem.Enabled = false;
                 showLicenseToolStripMenuItem.Enabled = true;
             }
+            else
+            {
+                showLicenseToolStripMenuItem.Enabled = false;
+            }
             if ((int)dgvApplications.CurrentRow.Cells[5].Value == 3 && dgvApplications.CurrentRow.Cells[6].Value.ToString() == "New")
             {
                 scheduleATestToolStripMenuItem.Enabled= false;
@@ -250,7 +255,6 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
                 cancelApplicationToolStripMenuItem.Enabled = false;
                 editApplicationToolStripMenuItem.Enabled = false;
                 issueDrivingLicenseToolStripMenuItem.Enabled = false;
-                showLicenseToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -324,6 +328,20 @@ namespace DVLD_ViewTier.Applications.LocalLicenseApplications
         private void editApplicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("not implemented yet");
+        }
+
+        private void showLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = (int)(dgvApplications.CurrentRow.Cells[0].Value);
+            ShowDrivingLicenseInfo licenseInfo = new ShowDrivingLicenseInfo(id);
+            licenseInfo.ShowDialog();
+        }
+
+        private void showPersonLicenseHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string NationalNumber = dgvApplications.CurrentRow.Cells[2].Value.ToString();
+            ShowLicenseHistory licenseHistory = new ShowLicenseHistory(NationalNumber);
+            licenseHistory.ShowDialog();
         }
     }
 }

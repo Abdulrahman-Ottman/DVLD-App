@@ -23,7 +23,12 @@ FROM                     Applications INNER JOIN
             //add local license application algorithm :
             //1- get all the person applications with type id 1 (local)
             //applications status : 1-new 2-canceled 3-completed
-
+            string checkLicenseExistQuery = @"SELECT   Count(*)
+FROM            Applications INNER JOIN
+                         Licenses ON Applications.ApplicationID = Licenses.ApplicationID INNER JOIN
+                         People ON Applications.ApplicantPersonID = People.PersonID Where PersonID = @personID";
+            SqlCommand command1 = new SqlCommand(checkLicenseExistQuery,clsSettings.connection);
+            command1.Parameters.AddWithValue("@personID", data["PersonID"]);
             string query = @"SELECT  Applications.*, LocalDrivingLicenseApplications.LicenseClassID
                             FROM Applications INNER JOIN LocalDrivingLicenseApplications
                             ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID
@@ -33,10 +38,11 @@ FROM                     Applications INNER JOIN
             try
             {
                 clsSettings.connection.Open();
+                int numOfResults = (int)command1.ExecuteScalar();
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader["LicenseClassID"].ToString() == data["LicenseClassID"] && reader["ApplicationStatus"].ToString() != "2")
+                    if (numOfResults>0&& reader["LicenseClassID"].ToString() == data["LicenseClassID"] && reader["ApplicationStatus"].ToString() != "2")
                     {
                         return id;
                     }

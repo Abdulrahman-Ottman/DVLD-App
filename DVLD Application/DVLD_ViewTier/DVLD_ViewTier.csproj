@@ -64,6 +64,12 @@
     <Compile Include="Licenses\LocalLicense\IssueLocalDrivingLicense.Designer.cs">
       <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
     </Compile>
+    <Compile Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.Designer.cs">
+      <DependentUpon>ShowDrivingLicenseInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +81,12 @@
     </Compile>
     <Compile Include="Licenses\LocalLicense\AddLocalLicensApplication.Designer.cs">
       <DependentUpon>AddLocalLicensApplication.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Licenses\ShowLicenseHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\ShowLicenseHistory.Designer.cs">
+      <DependentUpon>ShowLicenseHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="Login Form\LoginForm.cs">
       <SubType>Form</SubType>
@@ -183,11 +195,17 @@
     <EmbeddedResource Include="Licenses\LocalLicense\IssueLocalDrivingLicense.resx">
       <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.resx">
+      <DependentUpon>ShowDrivingLicenseInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\ShowLocalDrivingLicenseApplications.resx">
       <DependentUpon>ShowLocalDrivingLicenseApplications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\AddLocalLicensApplication.resx">
       <DependentUpon>AddLocalLicensApplication.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\ShowLicenseHistory.resx">
+      <DependentUpon>ShowLicenseHistory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login Form\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

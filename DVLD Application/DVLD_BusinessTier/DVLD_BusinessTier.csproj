@@ -50,6 +50,7 @@
     <Compile Include="CountryController.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="LicenseClassesController.cs" />
+    <Compile Include="LicenseController.cs" />
     <Compile Include="LoginController.cs" />
     <Compile Include="PersonController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
