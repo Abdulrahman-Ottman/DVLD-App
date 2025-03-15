@@ -76,7 +76,41 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable GenerateLicenseClassesDataTable()
+        {
+            DataTable results = new DataTable();
 
+            results.Columns.Add("LicenseClassID", typeof(int));
+            results.Columns.Add("ClassName", typeof(string));
+            results.Columns.Add("ClassDescription", typeof(string));
+            results.Columns.Add("MinimumAllowedAge", typeof(int));
+            results.Columns.Add("DefaultValidityLength", typeof(int));
+            results.Columns.Add("ClassFees", typeof(float));
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["LicenseClassID"];
+            results.PrimaryKey = keyColumns;
+
+            return results;
+        }
+        static public DataTable GenerateLocalApplicationsDataTable()
+        {
+            DataTable results = new DataTable();
+
+            results.Columns.Add("ApplicationID", typeof(int));
+            results.Columns.Add("LicenseClass", typeof(string));
+            results.Columns.Add("NationalNumber", typeof(string));
+            results.Columns.Add("FullName", typeof(string));
+            results.Columns.Add("ApplicationDate", typeof(DateTime));
+            results.Columns.Add("PassedTests", typeof(int));
+            results.Columns.Add("Status", typeof(string));
+
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = results.Columns["ApplicationID"];
+            results.PrimaryKey = keyColumns;
+
+            return results;
+        }
 
 
         //Command Executers
@@ -206,7 +240,75 @@ namespace DVLD_DataAccessTier
 
             return results;
         }
+        static public DataTable LicenseClassesCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateLicenseClassesDataTable();
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["LicenseClassID"],
+                          reader["ClassName"],
+                          reader["ClassDescription"],
+                          reader["MinimumAllowedAge"],
+                          reader["DefaultValidityLength"],
+                          reader["ClassFees"]
+                      );
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+            return results;
+        }
+        static public DataTable LocalApplicationsCommandExecuter(SqlCommand command)
+        {
+            DataTable results = GenerateLocalApplicationsDataTable();
+
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    results.Rows.Add(
+                          reader["ApplicationID"],
+                          reader["ClassName"],
+                          reader["NationalNo"],
+                          String.Join(" ", reader["FirstName"].ToString(),
+                               reader["SecondName"].ToString(),
+                               reader["ThirdName"].ToString(),
+                               reader["LastName"].ToString()),
+                          reader["ApplicationDate"],
+                          getNumberOfPassedTestes((int)reader["ApplicationID"]),
+                          StatusToString(int.Parse(reader["ApplicationStatus"].ToString()))
+
+                      );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+
+
+            return results;
+        }
 
         static public bool NonQueryCommandExecuter(SqlCommand command)
         {
@@ -298,6 +400,126 @@ namespace DVLD_DataAccessTier
 
 
             return user;
+        }
+
+        static public string GetApplicationTypeFeesByID(int id)
+        {
+            string query = "Select ApplicationFees from ApplicationTypes where ApplicationTypeID = @TypeID";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@TypeID", id);
+            string fees = null;
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    fees = reader["ApplicationFees"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+            
+             return fees;
+            
+        }
+        static public int getLocalApplicationIdByApplicationID(int applicationID)
+        {
+            int result = -1;
+            string query = @"SELECT   Applications.ApplicationID,LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID
+                    FROM 
+                            Applications 
+                    INNER JOIN
+                         LocalDrivingLicenseApplications ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID
+                    WHERE Applications.ApplicationID = @applicationID";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@applicationID" , applicationID);
+
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    result = (int)reader["LocalDrivingLicenseApplicationID"]; 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+            return result;
+        }
+        static public float getTestTypeFeesByID(int TestTypeID)
+        {
+            float result = -1;
+            string query = @"SELECT 
+                  TestTypeFees
+                  FROM TestTypes
+                   Where TestTypeID = @id";
+            SqlCommand command = new SqlCommand(query,clsSettings.connection);
+            command.Parameters.AddWithValue("@id",TestTypeID);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    result = Convert.ToSingle(reader["TestTypeFees"]);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally { clsSettings.connection.Close(); }
+            return result;
+        }
+        static public string StatusToString(int statusNumber)
+        {
+            string statusName = "";
+            switch (statusNumber) {
+                case 1:
+                    statusName = "New";
+                    break;
+                case 2:
+                    statusName = "Canceled";
+                    break;
+                case 3:
+                    statusName = "Completed";
+                    break;
+            }
+            return statusName;
+        }
+
+        static public int getNumberOfPassedTestes(int LocalLicenseApplicationID)
+        {
+            string query = @" SELECT COUNT(*) 
+        FROM Tests 
+        INNER JOIN TestAppointments 
+            ON Tests.TestAppointmentID = TestAppointments.TestAppointmentID 
+        INNER JOIN LocalDrivingLicenseApplications 
+            ON TestAppointments.LocalDrivingLicenseApplicationID = LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID 
+        WHERE ApplicationID = @ApplicationID AND TestResult = 1";
+  
+                using (SqlCommand command = new SqlCommand(query, clsSettings.connection))
+                {
+                    command.Parameters.AddWithValue("@ApplicationID", LocalLicenseApplicationID);
+                    int recordCount = (int)command.ExecuteScalar();
+                    return recordCount;
+                }
+            
         }
     }
 }

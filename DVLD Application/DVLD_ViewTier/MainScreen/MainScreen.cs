@@ -1,5 +1,7 @@
 ﻿using DVLD_BusinessTier;
 using DVLD_ViewTier.Applications.Applications_Types;
+using DVLD_ViewTier.Applications.LocalLicenseApplications;
+using DVLD_ViewTier.Licenses.LocalLicense;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,6 +56,23 @@ namespace DVLD_ViewTier.MainScreen
         {
             Tests.ShowTestsTypes showTestsTypes = new Tests.ShowTestsTypes();
             showTestsTypes.Show();
+        }
+
+        private void MainScreen_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void localLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddLocalLicensApplication addLocalLicensApplication = new AddLocalLicensApplication();
+            addLocalLicensApplication.Show();
+        }
+
+        private void localDrigingLicenseApplicationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowLocalDrivingLicenseApplications localApplications = new ShowLocalDrivingLicenseApplications();
+            localApplications.Show();
         }
     }
 }
