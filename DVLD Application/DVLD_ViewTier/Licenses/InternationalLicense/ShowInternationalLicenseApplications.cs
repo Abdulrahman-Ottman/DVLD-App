@@ -45,5 +45,11 @@ namespace DVLD_ViewTier.Licenses.InternationalLicense
                 LoadDataToGridView();
             }
         }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            data = ApplicationController.GetAllInternationalApplications();
+            LoadDataToGridView();
+        }
     }
 }

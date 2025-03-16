@@ -82,6 +82,12 @@
     <Compile Include="Licenses\LocalLicense\IssueLocalDrivingLicense.Designer.cs">
       <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
     </Compile>
+    <Compile Include="Licenses\LocalLicense\RenewLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\LocalLicense\RenewLicense.Designer.cs">
+      <DependentUpon>RenewLicense.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +227,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\IssueLocalDrivingLicense.resx">
       <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\LocalLicense\RenewLicense.resx">
+      <DependentUpon>RenewLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.resx">
       <DependentUpon>ShowDrivingLicenseInfo.cs</DependentUpon>

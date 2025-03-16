@@ -36,6 +36,7 @@
             this.lbRecords = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.tbDriverID = new System.Windows.Forms.TextBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -120,11 +121,22 @@
             this.tbDriverID.TabIndex = 7;
             this.tbDriverID.TextChanged += new System.EventHandler(this.tbNationalNo_TextChanged);
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(555, 66);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(69, 30);
+            this.btnRefresh.TabIndex = 8;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
             // ShowInternationalLicenseApplications
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 346);
+            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.tbDriverID);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lbRecords);
@@ -152,5 +164,6 @@
         private System.Windows.Forms.Label lbRecords;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbDriverID;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }

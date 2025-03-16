@@ -15,9 +15,9 @@ namespace DVLD_BusinessTier
         {
             return clsLicense.getLicenseInfo(applicationID);
         }
-        public static Dictionary<string, string> getLicenseInfoByLicenseID(int LicenseID)
+        public static Dictionary<string, string> getLicenseInfoByLicenseID(int LicenseID,string LicenseClass=null,bool IsActive=false)
         {
-            return clsLicense.getLicenseInfoByLicenseID(LicenseID);
+            return clsLicense.getLicenseInfoByLicenseID(LicenseID,LicenseClass,IsActive);
         }
 
         public static DataTable getLocalLicenseHistory(string NationalNumber)
@@ -32,6 +32,9 @@ namespace DVLD_BusinessTier
         {
             return clsLicense.issueInternationalLicense(LocalLicenseID, DriverID);
         }
-
+        public static bool renewLicense(int LicenseID, int DriverID)
+        {
+            return clsLicense.renewLicense(LicenseID, DriverID);
+        }
     }
 }

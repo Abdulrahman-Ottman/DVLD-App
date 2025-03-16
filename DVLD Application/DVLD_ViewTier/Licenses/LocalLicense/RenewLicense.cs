@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -11,28 +10,29 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace DVLD_ViewTier.Licenses.InternationalLicense
+namespace DVLD_ViewTier.Licenses.LocalLicense
 {
-    public partial class AddInternationalLicense : Form
+    public partial class RenewLicense : Form
     {
         bool personSelected = false;    
-        public AddInternationalLicense()
+        public RenewLicense()
         {
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != null && textBox1.Text.Length > 0)
+            if(tbLocalLicenseID.Text != null && tbLocalLicenseID.Text.Length > 0)
             {
-                Dictionary<string, string> data = LicenseController.getLicenseInfoByLicenseID(int.Parse(textBox1.Text),3.ToString(),true);
-                if (data.Count > 0)
+                Dictionary<string, string> data = LicenseController.getLicenseInfoByLicenseID(int.Parse(tbLocalLicenseID.Text),null,true);
+                if (data.Count > 0 && DateTime.Parse(data["ExpirationDate"]) < DateTime.Now)
                 {
+
                     lbClass.Text = data["Class"];
                     lbName.Text = data["Name"];
                     lbLicenseID.Text = data["LicenseID"];
@@ -56,22 +56,16 @@ namespace DVLD_ViewTier.Licenses.InternationalLicense
             }
         }
 
-        private void btnIssue_Click(object sender, EventArgs e)
+        private void btnRenew_Click(object sender, EventArgs e)
         {
-            if(personSelected)
-            {
-                if(DateTime.Parse(lbExpirationDate.Text) < DateTime.Now)
-                {
-                    MessageBox.Show("This License has bees expired","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                    return;
-                }
-                if (LicenseController.issueInternationalLicense(int.Parse(lbLicenseID.Text), int.Parse(lbDriverID.Text)))
-                {
-                    MessageBox.Show("International License Issued Successfully");
+            if (personSelected) {
+                if (LicenseController.renewLicense(int.Parse(tbLocalLicenseID.Text), int.Parse(lbDriverID.Text))){
+                    MessageBox.Show("License Has been renewed successfully");
+                    this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Failed to Issue the International License", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Failed to renew the license", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

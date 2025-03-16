@@ -94,5 +94,11 @@ namespace DVLD_ViewTier.MainScreen
             ShowInternationalLicenseApplications internationalLicenseApplications = new ShowInternationalLicenseApplications(); 
             internationalLicenseApplications.Show();
         }
+
+        private void renewDrivingLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RenewLicense renewLicense = new RenewLicense();
+            renewLicense.ShowDialog();  
+        }
     }
 }

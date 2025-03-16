@@ -493,7 +493,7 @@ FROM            InternationalLicenses ";
                 command2.Parameters.AddWithValue("@Notes", notes);
                 command2.Parameters.AddWithValue("@PaidFees", paidFees);
                 command2.Parameters.AddWithValue("@IsActive", true);
-                command2.Parameters.AddWithValue("@IssueReason", 0);
+                command2.Parameters.AddWithValue("@IssueReason", "First Time");
                 command2.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
                 result = clsHelpers.NonQueryCommandExecuter(command2);
             }
