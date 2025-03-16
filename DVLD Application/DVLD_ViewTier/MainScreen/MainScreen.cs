@@ -2,6 +2,7 @@
 using DVLD_ViewTier.Applications.Applications_Types;
 using DVLD_ViewTier.Applications.LocalLicenseApplications;
 using DVLD_ViewTier.Drivers;
+using DVLD_ViewTier.Licenses.InternationalLicense;
 using DVLD_ViewTier.Licenses.LocalLicense;
 using System;
 using System.Collections.Generic;
@@ -80,6 +81,18 @@ namespace DVLD_ViewTier.MainScreen
         {
             ShowDrivers showDrivers = new ShowDrivers();
             showDrivers.Show();
+        }
+
+        private void internationalLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddInternationalLicense addInternational = new AddInternationalLicense();   
+            addInternational.ShowDialog();
+        }
+
+        private void internationalDrivingLicenseApplicationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowInternationalLicenseApplications internationalLicenseApplications = new ShowInternationalLicenseApplications(); 
+            internationalLicenseApplications.Show();
         }
     }
 }

@@ -6,22 +6,24 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DVLD_DataAccessTier
 {
     public class clsLicense
     {
-        public static Dictionary<string ,string> getLicenseInfo(int applicationID)
-        {
-            Dictionary<string,string> data = new Dictionary<string,string>();
-            string query = @"SELECT      Applications.ApplicationID,  LicenseClasses.ClassName, People.FirstName, People.SecondName, People.ThirdName, People.LastName, People.NationalNo, Licenses.LicenseID, Licenses.IssueDate, Licenses.LicenseClass, Licenses.ExpirationDate, 
+        static string getLicenseInfoQuery = @"SELECT      Applications.ApplicationID,  LicenseClasses.ClassName, People.FirstName, People.SecondName, People.ThirdName, People.LastName, People.NationalNo, Licenses.LicenseID, Licenses.IssueDate, Licenses.LicenseClass, Licenses.ExpirationDate, 
                          Licenses.Notes, Licenses.IsActive, Licenses.IssueReason, People.DateOfBirth, People.Gender, Drivers.DriverID, People.ImagePath
 FROM            Drivers INNER JOIN
                          Licenses ON Drivers.DriverID = Licenses.DriverID
 						INNER JOIN Applications on Applications.ApplicationID = Licenses.ApplicationID
 						INNER JOIN
                          LicenseClasses ON Licenses.LicenseClass = LicenseClasses.LicenseClassID INNER JOIN
-                         People ON Drivers.PersonID = People.PersonID where Applications.ApplicationID = @applicationID";
+                         People ON Drivers.PersonID = People.PersonID";
+        public static Dictionary<string ,string> getLicenseInfo(int applicationID)
+        {
+            Dictionary<string,string> data = new Dictionary<string,string>();
+            string query = $"{getLicenseInfoQuery} where Applications.ApplicationID = @applicationID";
             SqlCommand command = new SqlCommand(query,clsSettings.connection);
             command.Parameters.AddWithValue("@applicationID",applicationID);
             try
@@ -97,5 +99,156 @@ Where People.NationalNo = @NationalNo";
             return data;
 
         }
+        public static DataTable getInternationalLicenseHistory(string NationalNo)
+        {
+            string query = @"SELECT        InternationalLicenses.InternationalLicenseID,InternationalLicenses.IsActive, InternationalLicenses.ApplicationID, InternationalLicenses.ExpirationDate, InternationalLicenses.IssueDate, People.NationalNo, 
+                         InternationalLicenses.IssuedUsingLocalLicenseID as LocalLicenseID
+FROM            Drivers INNER JOIN
+                         InternationalLicenses ON Drivers.DriverID = InternationalLicenses.DriverID INNER JOIN
+                         People ON Drivers.PersonID = People.PersonID
+						 Where NationalNo = @NationalNo";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@NationalNo", NationalNo);
+
+            DataTable data = new DataTable();
+            data.Columns.Add("InternationalLicenseID", typeof(int));
+            data.Columns.Add("ApplicationID", typeof(int));
+            data.Columns.Add("LocalLicenseID", typeof(int));
+            data.Columns.Add("IssueDate", typeof(DateTime));
+            data.Columns.Add("ExpirationDate", typeof(DateTime));
+            data.Columns.Add("IsActive", typeof(bool));
+            DataColumn[] keyColumns = new DataColumn[1];
+            keyColumns[0] = data.Columns["InternationalLicenseID"];
+            data.PrimaryKey = keyColumns;
+
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    data.Rows.Add(
+                        reader["InternationalLicenseID"],
+                        reader["ApplicationID"],
+                        reader["LocalLicenseID"],
+                        reader["IssueDate"],
+                        reader["ExpirationDate"],
+                        reader["IsActive"]
+                        );
+                }
+            }
+            catch (Exception ex) { throw ex; }
+            finally { clsSettings.connection.Close(); }
+
+
+            return data;
+        }
+
+        public static Dictionary<string, string> getLicenseInfoByLicenseID(int LicenseID)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            string query = $"{getLicenseInfoQuery} where Licenses.LicenseID = @LicenseID and Licenses.LicenseClass = 3 and Licenses.IsActive = 1";
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@LicenseID", LicenseID);
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    data.Add("Class", reader["ClassName"].ToString());
+                    data.Add("Name", reader["FirstName"].ToString() + " " + reader["SecondName"].ToString() + " " + reader["ThirdName"].ToString() + " " + reader["LastName"].ToString());
+                    data.Add("LicenseID", reader["LicenseID"].ToString());
+                    data.Add("NationalNo", reader["NationalNo"].ToString());
+                    data.Add("Gender", reader["Gender"].ToString());
+                    data.Add("IssueDate", reader["IssueDate"].ToString());
+                    data.Add("IssueReason", reader["IssueReason"].ToString());
+                    data.Add("Notes", reader["Notes"].ToString());
+                    data.Add("IsActive", reader["IsActive"].ToString());
+                    data.Add("DateOfBirth", reader["DateOfBirth"].ToString());
+                    data.Add("DriverID", reader["DriverID"].ToString());
+                    data.Add("ExpirationDate", reader["ExpirationDate"].ToString());
+                    //default for now
+                    data.Add("IsDetained", "false");
+                    data.Add("ImagePath", reader["ImagePath"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                clsSettings.connection.Close();
+            }
+            return data;
+        }
+        public static bool issueInternationalLicense(int LocalLicenseID , int DriverID)
+        {
+            //check if there is no International License related to this Local License ID
+            string query = @"select count(InternationalLicenseID) from InternationalLicenses Where IssuedUsingLocalLicenseID = @LocalLicenseID";
+            SqlCommand cmd = new SqlCommand(query,clsSettings.connection);
+            cmd.Parameters.AddWithValue("@LocalLicenseID", LocalLicenseID);
+            clsSettings.connection.Open();
+            int count = (int)cmd.ExecuteScalar();
+            clsSettings.connection.Close();
+            if (count > 0) { 
+                return false;
+            }
+            //create international license application
+            bool result = false;
+            int applicationID=-1;
+            int personID = -1;
+            string createApplicationQuery = @"INSERT INTO Applications 
+                          (ApplicantPersonID,ApplicationDate,ApplicationTypeID,ApplicationStatus,LastStatusDate,PaidFees,CreatedByUserID)
+                            Values
+                          (@ApplicantPersonID,@ApplicationDate,@ApplicationTypeID,@ApplicationStatus,@LastStatusDate,@PaidFees,@CreatedByUserID)
+                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            string getPersonIDQuery = @"SELECT PersonID From Drivers Where DriverID = @driverID";
+            SqlCommand getPersonIDCommand = new SqlCommand(getPersonIDQuery, clsSettings.connection);
+            getPersonIDCommand.Parameters.Add("@driverID", DriverID);
+            clsSettings.connection.Open();
+
+            personID = (int)getPersonIDCommand.ExecuteScalar();
+            clsSettings.connection.Close();
+            if (personID > -1)
+            {
+                SqlCommand createApplicationCommand = new SqlCommand(createApplicationQuery, clsSettings.connection);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicantPersonID", personID);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationDate", DateTime.Now);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationTypeID", 6);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationStatus", 3);
+                createApplicationCommand.Parameters.AddWithValue("@LastStatusDate", DateTime.Now);
+                createApplicationCommand.Parameters.AddWithValue("@PaidFees", clsHelpers.GetApplicationTypeFeesByID(6));
+                createApplicationCommand.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
+
+                clsSettings.connection.Open();
+
+                applicationID = (int)createApplicationCommand.ExecuteScalar();
+                 clsSettings.connection.Close();
+}
+            if (applicationID > -1) {
+                //create the international license
+                string createInternationalLicenseQuery = @"INSERT INTO InternationalLicenses 
+                          (ApplicationID,DriverID,IssuedUsingLocalLicenseID,IssueDate,ExpirationDate,IsActive,CreatedByUserID)
+                            Values
+                          (@ApplicationID,@DriverID,@IssuedUsingLocalLicenseID,@IssueDate,@ExpirationDate,@IsActive,@CreatedByUserID)
+                        ";
+
+                SqlCommand createInternationalLicenseCommand = new SqlCommand(createInternationalLicenseQuery, clsSettings.connection);
+                createInternationalLicenseCommand.Parameters.AddWithValue("@ApplicationID",applicationID);
+                createInternationalLicenseCommand.Parameters.AddWithValue("@DriverID",DriverID);
+                createInternationalLicenseCommand.Parameters.AddWithValue("@IssuedUsingLocalLicenseID", LocalLicenseID);
+                createInternationalLicenseCommand.Parameters.AddWithValue("@IssueDate", DateTime.Now);
+                createInternationalLicenseCommand.Parameters.AddWithValue("@ExpirationDate", DateTime.Now.AddYears(10));
+                createInternationalLicenseCommand.Parameters.AddWithValue("@IsActive", 1);
+                createInternationalLicenseCommand.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
+
+                result = clsHelpers.NonQueryCommandExecuter(createInternationalLicenseCommand); 
+            }
+            return result;
+        }
+        
+        
     }
 }

@@ -36,3 +36,5 @@ C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Lice
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Licenses.LocalLicense.ShowDrivingLicenseInfo.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Licenses.ShowLicenseHistory.resources
 C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Drivers.ShowDrivers.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Licenses.InternationalLicense.AddInternationalLicense.resources
+C:\Projects\DVLD APP\DVLD Application\DVLD_ViewTier\obj\Debug\DVLD_ViewTier.Licenses.InternationalLicense.ShowInternationalLicenseApplications.resources

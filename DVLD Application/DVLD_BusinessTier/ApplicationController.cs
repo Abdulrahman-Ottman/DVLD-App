@@ -53,5 +53,10 @@ namespace DVLD_BusinessTier
         {
             return clsApplication.cancelApplication(applicationID);
         }
+
+        public static DataTable GetAllInternationalApplications(string DriverIDFilter = null)
+        {
+            return clsApplication.GetAllInternationalApplications(DriverIDFilter);
+        }
     }
 }

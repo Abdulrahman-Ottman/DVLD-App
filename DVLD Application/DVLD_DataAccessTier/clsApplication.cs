@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DVLD_DataAccessTier
@@ -72,7 +73,7 @@ FROM            Applications INNER JOIN
                 command2.Parameters.AddWithValue("@ApplicationTypeID", 1);
                 command2.Parameters.AddWithValue("@ApplicationStatus", 1);
                 command2.Parameters.AddWithValue("@LastStatusDate", data["ApplicationDate"]);
-                command2.Parameters.AddWithValue("@PaidFees", 0);
+                command2.Parameters.AddWithValue("@PaidFees", clsHelpers.GetApplicationTypeFeesByID(1));
                 command2.Parameters.AddWithValue("@CreatedByUserID", data["UserID"]);
 
                 var result = command2.ExecuteScalar();
@@ -112,7 +113,48 @@ FROM            Applications INNER JOIN
             results = clsHelpers.LocalApplicationsCommandExecuter(command);
             return results;
         }
+        public static DataTable GetAllInternationalApplications(string DriverIDFilter = null)
+        {
+            string query = @"SELECT        InternationalLicenseID, ApplicationID, DriverID, IssuedUsingLocalLicenseID as LocalLicenseID, IssueDate, ExpirationDate, IsActive
+FROM            InternationalLicenses ";
+            if (DriverIDFilter != null)
+            {
+                query += " WHERE DriverID Like '%'+@DriverID+'%' ";
+            }
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            if (DriverIDFilter != null)
+            {
+                command.Parameters.AddWithValue("@DriverID", DriverIDFilter);
+            }
+            DataTable data = new DataTable();
+            data.Columns.Add("IN License ID" , typeof(int));
+            data.Columns.Add("Application ID" , typeof(int));
+            data.Columns.Add("Driver ID" , typeof(int));
+            data.Columns.Add("L.D.L ID" , typeof(int));
+            data.Columns.Add("Issue Date" , typeof(DateTime));
+            data.Columns.Add("Expiration Date" , typeof(DateTime));
+            data.Columns.Add("Is Active" , typeof(bool));
 
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    data.Rows.Add(
+                        reader["InternationalLicenseID"],
+                        reader["ApplicationID"],
+                        reader["DriverID"],
+                        reader["LocalLicenseID"],
+                        reader["IssueDate"],
+                        reader["ExpirationDate"],
+                        reader["IsActive"]
+                        );
+                }
+            }catch (Exception ex) {throw ex;}
+            finally { clsSettings.connection.Close(); } 
+            return data;
+        }
         public static DataTable GetLocalApplicationsOnFilter(string filter, string value) {
             string query;
             string parameterName = "None";

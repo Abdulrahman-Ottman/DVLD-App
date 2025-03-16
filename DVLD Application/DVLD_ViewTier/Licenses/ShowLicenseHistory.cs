@@ -46,6 +46,9 @@ namespace DVLD_ViewTier.Licenses
             tabPage2.Text = "International";
             dgvLocalLicense.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLocalLicense.DataSource = LicenseController.getLocalLicenseHistory(NationalNumber);
+        
+            dgvInternationalLicesnse.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvInternationalLicesnse.DataSource = LicenseController.getInternationalLicenseHistory(NationalNumber); 
         }
 
         private void btnCLose_Click(object sender, EventArgs e)
