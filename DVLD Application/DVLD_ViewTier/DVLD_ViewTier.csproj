@@ -58,11 +58,35 @@
     <Compile Include="Applications\Applications_Types\ShowApplicationsTypes.Designer.cs">
       <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Drivers\ShowDrivers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Drivers\ShowDrivers.Designer.cs">
+      <DependentUpon>ShowDrivers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Licenses\InternationalLicense\AddInternationalLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\InternationalLicense\AddInternationalLicense.Designer.cs">
+      <DependentUpon>AddInternationalLicense.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Licenses\InternationalLicense\ShowInternationalLicenseApplications.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\InternationalLicense\ShowInternationalLicenseApplications.Designer.cs">
+      <DependentUpon>ShowInternationalLicenseApplications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\LocalLicense\IssueLocalDrivingLicense.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Licenses\LocalLicense\IssueLocalDrivingLicense.Designer.cs">
       <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Licenses\LocalLicense\RenewLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\LocalLicense\RenewLicense.Designer.cs">
+      <DependentUpon>RenewLicense.cs</DependentUpon>
     </Compile>
     <Compile Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.cs">
       <SubType>Form</SubType>
@@ -192,8 +216,20 @@
     <EmbeddedResource Include="Applications\Applications_Types\ShowApplicationsTypes.resx">
       <DependentUpon>ShowApplicationsTypes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Drivers\ShowDrivers.resx">
+      <DependentUpon>ShowDrivers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\InternationalLicense\AddInternationalLicense.resx">
+      <DependentUpon>AddInternationalLicense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\InternationalLicense\ShowInternationalLicenseApplications.resx">
+      <DependentUpon>ShowInternationalLicenseApplications.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\IssueLocalDrivingLicense.resx">
       <DependentUpon>IssueLocalDrivingLicense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\LocalLicense\RenewLicense.resx">
+      <DependentUpon>RenewLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\ShowDrivingLicenseInfo.resx">
       <DependentUpon>ShowDrivingLicenseInfo.cs</DependentUpon>

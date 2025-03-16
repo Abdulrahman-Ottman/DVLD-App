@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DVLD_DataAccessTier
@@ -72,7 +73,7 @@ FROM            Applications INNER JOIN
                 command2.Parameters.AddWithValue("@ApplicationTypeID", 1);
                 command2.Parameters.AddWithValue("@ApplicationStatus", 1);
                 command2.Parameters.AddWithValue("@LastStatusDate", data["ApplicationDate"]);
-                command2.Parameters.AddWithValue("@PaidFees", 0);
+                command2.Parameters.AddWithValue("@PaidFees", clsHelpers.GetApplicationTypeFeesByID(1));
                 command2.Parameters.AddWithValue("@CreatedByUserID", data["UserID"]);
 
                 var result = command2.ExecuteScalar();
@@ -112,7 +113,48 @@ FROM            Applications INNER JOIN
             results = clsHelpers.LocalApplicationsCommandExecuter(command);
             return results;
         }
+        public static DataTable GetAllInternationalApplications(string DriverIDFilter = null)
+        {
+            string query = @"SELECT        InternationalLicenseID, ApplicationID, DriverID, IssuedUsingLocalLicenseID as LocalLicenseID, IssueDate, ExpirationDate, IsActive
+FROM            InternationalLicenses ";
+            if (DriverIDFilter != null)
+            {
+                query += " WHERE DriverID Like '%'+@DriverID+'%' ";
+            }
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            if (DriverIDFilter != null)
+            {
+                command.Parameters.AddWithValue("@DriverID", DriverIDFilter);
+            }
+            DataTable data = new DataTable();
+            data.Columns.Add("IN License ID" , typeof(int));
+            data.Columns.Add("Application ID" , typeof(int));
+            data.Columns.Add("Driver ID" , typeof(int));
+            data.Columns.Add("L.D.L ID" , typeof(int));
+            data.Columns.Add("Issue Date" , typeof(DateTime));
+            data.Columns.Add("Expiration Date" , typeof(DateTime));
+            data.Columns.Add("Is Active" , typeof(bool));
 
+            try
+            {
+                clsSettings.connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    data.Rows.Add(
+                        reader["InternationalLicenseID"],
+                        reader["ApplicationID"],
+                        reader["DriverID"],
+                        reader["LocalLicenseID"],
+                        reader["IssueDate"],
+                        reader["ExpirationDate"],
+                        reader["IsActive"]
+                        );
+                }
+            }catch (Exception ex) {throw ex;}
+            finally { clsSettings.connection.Close(); } 
+            return data;
+        }
         public static DataTable GetLocalApplicationsOnFilter(string filter, string value) {
             string query;
             string parameterName = "None";
@@ -385,25 +427,52 @@ FROM            Applications INNER JOIN
             //2-create the driver entry
             if(PersonID > 0 && LicenseClassID > 0)
             {
-                string query1 = @"INSERT INTO Drivers (PersonID,CreatedByUserID,CreatedDate)
-                              Values (@personID,@CreatedByUser,@CreatedDate)
-                            SELECT CAST(SCOPE_IDENTITY() AS int)";
-                SqlCommand command1 = new SqlCommand(query1, clsSettings.connection);
-                command1.Parameters.AddWithValue("@personID", PersonID);
-                command1.Parameters.AddWithValue("@CreatedByUser", clsSettings.currentUser.UserId);
-                command1.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
-                try
+                //check if the driver is already exist (has a license befor so it has been created)
+                string checkIfDriversExist = @"SELECT COUNT(*) 
+                    FROM Drivers  
+                    WHERE PersonID = @PersonID;";
+                int countOfDriversWithPersonID = 0;
+                using (SqlCommand cmd = new SqlCommand(checkIfDriversExist, clsSettings.connection))
                 {
                     clsSettings.connection.Open();
-                    driverID = (int)command1.ExecuteScalar();
-                }
-                catch (Exception ex) {
-                    Console.WriteLine(ex.Message);
-                    return false;
-                }
-                finally
-                {
+                    cmd.Parameters.AddWithValue("@PersonID",PersonID);
+                    countOfDriversWithPersonID = (int)cmd.ExecuteScalar();
                     clsSettings.connection.Close();
+                }
+                if (countOfDriversWithPersonID == 0)
+                {
+                    string query1 = @"INSERT INTO Drivers (PersonID,CreatedByUserID,CreatedDate)
+                              Values (@personID,@CreatedByUser,@CreatedDate)
+                            SELECT CAST(SCOPE_IDENTITY() AS int)";
+                    SqlCommand command1 = new SqlCommand(query1, clsSettings.connection);
+                    command1.Parameters.AddWithValue("@personID", PersonID);
+                    command1.Parameters.AddWithValue("@CreatedByUser", clsSettings.currentUser.UserId);
+                    command1.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                    try
+                    {
+                        clsSettings.connection.Open();
+                        driverID = (int)command1.ExecuteScalar();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return false;
+                    }
+                    finally
+                    {
+                        clsSettings.connection.Close();
+                    }
+                }
+                else
+                {
+                    string getDriverIDQuery = "Select DriverID from Drivers Where PersonID = @PersonID";
+                    using (SqlCommand cmd1 = new SqlCommand(getDriverIDQuery, clsSettings.connection))
+                    {
+                        cmd1.Parameters.AddWithValue("@PersonID",PersonID);
+                        clsSettings.connection.Open();
+                        driverID = (int)cmd1.ExecuteScalar();
+                        clsSettings.connection.Close();
+                    }
                 }
             
 
@@ -424,7 +493,7 @@ FROM            Applications INNER JOIN
                 command2.Parameters.AddWithValue("@Notes", notes);
                 command2.Parameters.AddWithValue("@PaidFees", paidFees);
                 command2.Parameters.AddWithValue("@IsActive", true);
-                command2.Parameters.AddWithValue("@IssueReason", 0);
+                command2.Parameters.AddWithValue("@IssueReason", "First Time");
                 command2.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
                 result = clsHelpers.NonQueryCommandExecuter(command2);
             }

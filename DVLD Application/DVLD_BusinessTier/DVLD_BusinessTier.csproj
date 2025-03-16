@@ -48,6 +48,7 @@
     <Compile Include="ApplicationController.cs" />
     <Compile Include="ApplicationsTypesController.cs" />
     <Compile Include="CountryController.cs" />
+    <Compile Include="DriverController.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="LicenseClassesController.cs" />
     <Compile Include="LicenseController.cs" />
