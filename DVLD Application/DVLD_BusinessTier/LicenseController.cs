@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DVLD_DataAccessTier;
+using static DVLD_DataAccessTier.clsLicense;
 
 namespace DVLD_BusinessTier
 {
@@ -35,6 +36,18 @@ namespace DVLD_BusinessTier
         public static bool renewLicense(int LicenseID, int DriverID)
         {
             return clsLicense.renewLicense(LicenseID, DriverID);
+        }
+        public static bool replaceLicense(int LicenseID, int DriverID, int status)
+        {
+            if (status == 0)
+            {
+                return clsLicense.replaceLicense(LicenseID, DriverID, clsLicense.LicenseStatus.Damaged);
+            }
+            else
+            {
+                return clsLicense.replaceLicense(LicenseID, DriverID, clsLicense.LicenseStatus.Lost);
+            }
+
         }
     }
 }

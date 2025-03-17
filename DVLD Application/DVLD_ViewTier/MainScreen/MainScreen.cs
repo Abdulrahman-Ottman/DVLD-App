@@ -2,6 +2,7 @@
 using DVLD_ViewTier.Applications.Applications_Types;
 using DVLD_ViewTier.Applications.LocalLicenseApplications;
 using DVLD_ViewTier.Drivers;
+using DVLD_ViewTier.Licenses;
 using DVLD_ViewTier.Licenses.InternationalLicense;
 using DVLD_ViewTier.Licenses.LocalLicense;
 using System;
@@ -99,6 +100,12 @@ namespace DVLD_ViewTier.MainScreen
         {
             RenewLicense renewLicense = new RenewLicense();
             renewLicense.ShowDialog();  
+        }
+
+        private void replacmentToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LicenseReplacment licenseReplacment = new LicenseReplacment();
+            licenseReplacment.ShowDialog();
         }
     }
 }
