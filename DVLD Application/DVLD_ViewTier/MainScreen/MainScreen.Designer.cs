@@ -150,6 +150,7 @@
             this.replacmentToToolStripMenuItem.Name = "replacmentToToolStripMenuItem";
             this.replacmentToToolStripMenuItem.Size = new System.Drawing.Size(346, 24);
             this.replacmentToToolStripMenuItem.Text = "Replacment for lost or Damaged license";
+            this.replacmentToToolStripMenuItem.Click += new System.EventHandler(this.replacmentToToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 

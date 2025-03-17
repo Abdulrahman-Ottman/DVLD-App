@@ -12,6 +12,11 @@ namespace DVLD_DataAccessTier
 {
     public class clsLicense
     {
+        public enum LicenseStatus
+        {
+            Damaged,
+            Lost
+        }
         static string getLicenseInfoQuery = @"SELECT      Applications.ApplicationID,  LicenseClasses.ClassName, People.FirstName, People.SecondName, People.ThirdName, People.LastName, People.NationalNo, Licenses.LicenseID, Licenses.IssueDate, Licenses.LicenseClass, Licenses.ExpirationDate, 
                          Licenses.Notes, Licenses.IsActive, Licenses.IssueReason, People.DateOfBirth, People.Gender, Drivers.DriverID, People.ImagePath
 FROM            Drivers INNER JOIN
@@ -327,6 +332,76 @@ FROM            Drivers INNER JOIN
 
             return result;
         }
+        public static bool replaceLicense(int LicenseID,int DriverID,LicenseStatus status)
+        {
+            bool result = false;
+            int applicationID = -1;
+            int personID = -1;
+            string createRenewApplication = @"INSERT INTO Applications 
+                          (ApplicantPersonID,ApplicationDate,ApplicationTypeID,ApplicationStatus,LastStatusDate,PaidFees,CreatedByUserID)
+                            Values
+                          (@ApplicantPersonID,@ApplicationDate,@ApplicationTypeID,@ApplicationStatus,@LastStatusDate,@PaidFees,@CreatedByUserID)
+                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            string getPersonIDQuery = @"SELECT PersonID From Drivers Where DriverID = @driverID";
+            SqlCommand getPersonIDCommand = new SqlCommand(getPersonIDQuery, clsSettings.connection);
+            getPersonIDCommand.Parameters.AddWithValue("@driverID", DriverID);
+            clsSettings.connection.Open();
+            personID = (int)getPersonIDCommand.ExecuteScalar();
+            clsSettings.connection.Close();
+            int ApplicationType = status == LicenseStatus.Lost ? 3 : 4 ;
+           
+            if (personID > -1)
+            {
+                SqlCommand createApplicationCommand = new SqlCommand(createRenewApplication, clsSettings.connection);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicantPersonID", personID);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationDate", DateTime.Now);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationTypeID", ApplicationType);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationStatus", 3);
+                createApplicationCommand.Parameters.AddWithValue("@LastStatusDate", DateTime.Now);
+                createApplicationCommand.Parameters.AddWithValue("@PaidFees", clsHelpers.GetApplicationTypeFeesByID(ApplicationType));
+                createApplicationCommand.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
 
+                clsSettings.connection.Open();
+                applicationID = (int)createApplicationCommand.ExecuteScalar();
+                clsSettings.connection.Close();
+            }
+
+            if (applicationID > -1)
+            {
+                string getOldLicenseQuery = @"Select * from Licenses Where LicenseID = @LicenseID";
+                string createNewLicenseQuery = @"INSERT INTO Licenses
+                        (ApplicationID,DriverID,LicenseClass,IssueDate,ExpirationDate,Notes,PaidFees,IsActive,IssueReason,CreatedByUserID)
+                        Values
+                        (@ApplicationID,@DriverID,@LicenseClass,@IssueDate,@ExpirationDate,@Notes,@PaidFees,1,@IssueReason,@CreatedByUserID)";
+                SqlCommand createNewLicenseCommand = new SqlCommand(createNewLicenseQuery, clsSettings.connection);
+                SqlCommand getOldLicenseCommand = new SqlCommand(getOldLicenseQuery, clsSettings.connection);
+                getOldLicenseCommand.Parameters.AddWithValue("@LicenseID", LicenseID);
+                clsSettings.connection.Open();
+                SqlDataReader reader = getOldLicenseCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    createNewLicenseCommand.Parameters.AddWithValue("@ApplicationID", applicationID);
+                    createNewLicenseCommand.Parameters.AddWithValue("@DriverID", DriverID);
+                    createNewLicenseCommand.Parameters.AddWithValue("@LicenseClass", reader["LicenseClass"]);
+                    createNewLicenseCommand.Parameters.AddWithValue("@IssueDate", DateTime.Now);
+                    createNewLicenseCommand.Parameters.AddWithValue("@ExpirationDate", DateTime.Now.AddYears(10));
+                    createNewLicenseCommand.Parameters.AddWithValue("@Notes", reader["Notes"]);
+                    createNewLicenseCommand.Parameters.AddWithValue("@PaidFees", reader["PaidFees"]);
+                    createNewLicenseCommand.Parameters.AddWithValue("@IssueReason", "Replacement");
+                    createNewLicenseCommand.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
+                }
+                clsSettings.connection.Close();
+                result = clsHelpers.NonQueryCommandExecuter(createNewLicenseCommand);
+                if (result)
+                {
+                    string updateOldLicenseActive = @"Update Licenses set IsActive=0 Where LicenseID = @LicenseID";
+                    SqlCommand updateOldLicenseCommand = new SqlCommand(updateOldLicenseActive, clsSettings.connection);
+                    updateOldLicenseCommand.Parameters.AddWithValue("@LicenseID", LicenseID);
+                    result = clsHelpers.NonQueryCommandExecuter(updateOldLicenseCommand);
+                }
+            }
+
+            return result;
+        }
     }
 }
