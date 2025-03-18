@@ -64,6 +64,12 @@
     <Compile Include="Drivers\ShowDrivers.Designer.cs">
       <DependentUpon>ShowDrivers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Licenses\DetainLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\DetainLicense.Designer.cs">
+      <DependentUpon>DetainLicense.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\InternationalLicense\AddInternationalLicense.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +117,12 @@
     </Compile>
     <Compile Include="Licenses\LocalLicense\AddLocalLicensApplication.Designer.cs">
       <DependentUpon>AddLocalLicensApplication.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Licenses\ReleaseLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licenses\ReleaseLicense.Designer.cs">
+      <DependentUpon>ReleaseLicense.cs</DependentUpon>
     </Compile>
     <Compile Include="Licenses\ShowLicenseHistory.cs">
       <SubType>Form</SubType>
@@ -225,6 +237,9 @@
     <EmbeddedResource Include="Drivers\ShowDrivers.resx">
       <DependentUpon>ShowDrivers.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\DetainLicense.resx">
+      <DependentUpon>DetainLicense.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Licenses\InternationalLicense\AddInternationalLicense.resx">
       <DependentUpon>AddInternationalLicense.cs</DependentUpon>
     </EmbeddedResource>
@@ -248,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\LocalLicense\AddLocalLicensApplication.resx">
       <DependentUpon>AddLocalLicensApplication.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Licenses\ReleaseLicense.resx">
+      <DependentUpon>ReleaseLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\ShowLicenseHistory.resx">
       <DependentUpon>ShowLicenseHistory.cs</DependentUpon>

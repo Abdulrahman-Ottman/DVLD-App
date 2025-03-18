@@ -49,5 +49,13 @@ namespace DVLD_BusinessTier
             }
 
         }
+        public static bool detainLicense(int LicenseID, string fineFees)
+        {
+            return clsLicense.detainLicense(LicenseID, fineFees);
+        }
+        public static bool releaseLicense(int LicenseID, int DriverID)
+        {
+            return clsLicense.releaseLicense(LicenseID, DriverID);
+        }
     }
 }
