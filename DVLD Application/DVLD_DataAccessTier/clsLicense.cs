@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DVLD_DataAccessTier
@@ -165,37 +166,52 @@ FROM            Drivers INNER JOIN
                 command.Parameters.AddWithValue("@LicenseClass", LicenseClass);
             }
             command.Parameters.AddWithValue("@IsActive", IsActive);
-            try
+
+            //get the IsDetained Value
+            string IsDetainedQuery = @"Select count(*) from DetainedLicenses Where LicenseID = @LicenseID and IsReleased = 0";
+            string isDetained = "False";
+            using (SqlCommand command1 = new SqlCommand(IsDetainedQuery, clsSettings.connection))
             {
+                command1.Parameters.AddWithValue("@LicenseID", LicenseID);
                 clsSettings.connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.Read())
+                int count = (int)command1.ExecuteScalar();
+                clsSettings.connection.Close();
+                if (count > 0)
                 {
-                    data.Add("Class", reader["ClassName"].ToString());
-                    data.Add("Name", reader["FirstName"].ToString() + " " + reader["SecondName"].ToString() + " " + reader["ThirdName"].ToString() + " " + reader["LastName"].ToString());
-                    data.Add("LicenseID", reader["LicenseID"].ToString());
-                    data.Add("NationalNo", reader["NationalNo"].ToString());
-                    data.Add("Gender", reader["Gender"].ToString());
-                    data.Add("IssueDate", reader["IssueDate"].ToString());
-                    data.Add("IssueReason", reader["IssueReason"].ToString());
-                    data.Add("Notes", reader["Notes"].ToString());
-                    data.Add("IsActive", reader["IsActive"].ToString());
-                    data.Add("DateOfBirth", reader["DateOfBirth"].ToString());
-                    data.Add("DriverID", reader["DriverID"].ToString());
-                    data.Add("ExpirationDate", reader["ExpirationDate"].ToString());
-                    //default for now
-                    data.Add("IsDetained", "false");
-                    data.Add("ImagePath", reader["ImagePath"].ToString());
+                    isDetained = "True";
                 }
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                clsSettings.connection.Close();
-            }
+                try
+                {
+                    clsSettings.connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        data.Add("Class", reader["ClassName"].ToString());
+                        data.Add("Name", reader["FirstName"].ToString() + " " + reader["SecondName"].ToString() + " " + reader["ThirdName"].ToString() + " " + reader["LastName"].ToString());
+                        data.Add("LicenseID", reader["LicenseID"].ToString());
+                        data.Add("NationalNo", reader["NationalNo"].ToString());
+                        data.Add("Gender", reader["Gender"].ToString());
+                        data.Add("IssueDate", reader["IssueDate"].ToString());
+                        data.Add("IssueReason", reader["IssueReason"].ToString());
+                        data.Add("Notes", reader["Notes"].ToString());
+                        data.Add("IsActive", reader["IsActive"].ToString());
+                        data.Add("DateOfBirth", reader["DateOfBirth"].ToString());
+                        data.Add("DriverID", reader["DriverID"].ToString());
+                        data.Add("ExpirationDate", reader["ExpirationDate"].ToString());
+                        //default for now
+                        data.Add("IsDetained", isDetained);
+                        data.Add("ImagePath", reader["ImagePath"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    clsSettings.connection.Close();
+                }
             return data;
         }
         public static bool issueInternationalLicense(int LocalLicenseID , int DriverID)
@@ -402,6 +418,76 @@ FROM            Drivers INNER JOIN
             }
 
             return result;
+        }
+
+
+        public static bool detainLicense(int LicenseID,string fineFees)
+        {
+            string query = @"INSERT INTO DetainedLicenses (LicenseID,DetainDate,FineFees,CreatedByUserID,IsReleased)
+            Values
+            (@LicenseID,@DetainDate,@FineFees,@CreatedByUserID,@IsReleased)";
+        
+            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            command.Parameters.AddWithValue("@LicenseID",LicenseID);
+            command.Parameters.AddWithValue("@DetainDate", DateTime.Now);
+            command.Parameters.AddWithValue("@FineFees", fineFees);
+            command.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
+            command.Parameters.AddWithValue("@IsReleased", 0);
+
+
+            return clsHelpers.NonQueryCommandExecuter(command);
+        }
+
+        public static bool releaseLicense(int LicenseID,int DriverID)
+        {
+            //1 create a release application 
+            //2 update the info in DetainedLicenses table
+            int applicationID = -1;
+            int personID = -1;
+            string createReleaseApplication = @"INSERT INTO Applications 
+                          (ApplicantPersonID,ApplicationDate,ApplicationTypeID,ApplicationStatus,LastStatusDate,PaidFees,CreatedByUserID)
+                            Values
+                          (@ApplicantPersonID,@ApplicationDate,@ApplicationTypeID,@ApplicationStatus,@LastStatusDate,@PaidFees,@CreatedByUserID)
+                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            string getPersonIDQuery = @"SELECT PersonID From Drivers Where DriverID = @driverID";
+            SqlCommand getPersonIDCommand = new SqlCommand(getPersonIDQuery, clsSettings.connection);
+            getPersonIDCommand.Parameters.AddWithValue("@driverID", DriverID);
+            clsSettings.connection.Open();
+            personID = (int)getPersonIDCommand.ExecuteScalar();
+            clsSettings.connection.Close();
+
+            if (personID > -1)
+            {
+                SqlCommand createApplicationCommand = new SqlCommand(createReleaseApplication, clsSettings.connection);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicantPersonID", personID);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationDate", DateTime.Now);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationTypeID", 5);
+                createApplicationCommand.Parameters.AddWithValue("@ApplicationStatus", 3);
+                createApplicationCommand.Parameters.AddWithValue("@LastStatusDate", DateTime.Now);
+                createApplicationCommand.Parameters.AddWithValue("@PaidFees", clsHelpers.GetApplicationTypeFeesByID(5));
+                createApplicationCommand.Parameters.AddWithValue("@CreatedByUserID", clsSettings.currentUser.UserId);
+
+                clsSettings.connection.Open();
+                applicationID = (int)createApplicationCommand.ExecuteScalar();
+                clsSettings.connection.Close();
+                if (applicationID > 0) {
+                    string updateDetainedLicenseInfo = @"Update DetainedLicenses set 
+                               IsReleased = 1,
+                                ReleaseDate=@ReleasedDate,
+                                ReleasedByUserID=@ReleasedByUserID,
+                                ReleaseApplicationID=@ReleasedApplicationID Where LicenseID=@LicenseID";
+
+                    using(SqlCommand cmd = new SqlCommand(updateDetainedLicenseInfo, clsSettings.connection))
+                    {
+                        cmd.Parameters.AddWithValue("@ReleasedDate",DateTime.Now);
+                        cmd.Parameters.AddWithValue("@ReleasedByUserID", clsSettings.currentUser.UserId);
+                        cmd.Parameters.AddWithValue("@ReleasedApplicationID", applicationID);
+                        cmd.Parameters.AddWithValue("@LicenseID", LicenseID);
+                        return clsHelpers.NonQueryCommandExecuter(cmd);
+                    }
+                } 
+            }
+            return false;
         }
     }
 }

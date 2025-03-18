@@ -107,5 +107,17 @@ namespace DVLD_ViewTier.MainScreen
             LicenseReplacment licenseReplacment = new LicenseReplacment();
             licenseReplacment.ShowDialog();
         }
+
+        private void detaineLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DetainLicense detainLicense = new DetainLicense();
+            detainLicense.ShowDialog();
+        }
+
+        private void releToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReleaseLicense releaseLicense = new ReleaseLicense();
+            releaseLicense.ShowDialog();
+        }
     }
 }
