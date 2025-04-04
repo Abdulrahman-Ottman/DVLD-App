@@ -281,6 +281,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(434, 282);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -319,10 +320,12 @@
             this.pbPersonaleImage.TabIndex = 1;
             this.pbPersonaleImage.TabStop = false;
             // 
-            // AddPerson
+            // AddEditPerson
             // 
+            this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(619, 320);
             this.Controls.Add(this.btnUploadeImage);
             this.Controls.Add(this.btnSave);
@@ -353,7 +356,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pbPersonaleImage);
             this.Controls.Add(this.label1);
-            this.Name = "AddPerson";
+            this.Name = "AddEditPerson";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AddPerson";
             this.Load += new System.EventHandler(this.AddPerson_Load);

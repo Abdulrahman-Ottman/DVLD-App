@@ -10,7 +10,7 @@ namespace DVLD_ViewTier.People
 {
     public partial class PeopleManagement : Form
     {
-        DataTable peopleData = PersonController.GetAllPeople();
+        private static DataTable peopleData = PersonController.GetAllPeople();
 
         Control currentFilterControl = null;
         public PeopleManagement()
@@ -205,38 +205,56 @@ namespace DVLD_ViewTier.People
         }         
         private void inputControl_TextChanged(object sender , EventArgs e)
         {
+            string filterColumn = "";
            switch (((TextBox)sender).Name)
             {
                 case "tbNationalNumber":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("NationalNumber" , ((TextBox)sender).Text);
+                    filterColumn = "NationalNumber";
                     break;
                 case "tbFirstName":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("FirstName", ((TextBox)sender).Text);
+                    filterColumn = "FirstName";
                     break;
                 case "tbSecondName":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("SecondName", ((TextBox)sender).Text);
+                filterColumn = "SecondName";
                     break;
                 case "tbThirdName":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("ThirdName", ((TextBox)sender).Text);
+                filterColumn = "ThirdName";
                     break;
                 case "tbLastName":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("LastName", ((TextBox)sender).Text);
+                filterColumn = "LastName" ;
                     break;
                 case "tbAddress":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("Address", ((TextBox)sender).Text);
+                    filterColumn = "Address";
                     break;
                 case "tbPhone":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("Phone", ((TextBox)sender).Text);
+                    filterColumn = "Phone";
                     break;
                 case "tbEmail":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("Email", ((TextBox)sender).Text);
+                    filterColumn = "Email";
                     break;
                 case "tbCreatedBy":
-                    peopleData = PersonController.GetPeopleBasedOnFilter("Created_by", ((TextBox)sender).Text);
+                 filterColumn = "Created_by";
+                    break;
+                default:
+                    filterColumn = "None";
                     break;
             }
-            LoadDataToGridView();
+            if (currentFilterControl.Text.Trim() == "" || filterColumn == "None")
+            {
+                peopleData.DefaultView.RowFilter = "";
+                lbRecordsCount.Text = $"# Records: {dgvViewPeople.Rows.Count.ToString()}";
+                return;
+            }
+            if (filterColumn == "PersonID")
+                //in this case we deal with integer not string.
+
+                peopleData.DefaultView.RowFilter = string.Format("[{0}] = {1}", filterColumn, currentFilterControl.Text.Trim());
+            else
+                peopleData.DefaultView.RowFilter = string.Format("[{0}] LIKE '{1}%'", filterColumn, currentFilterControl.Text.Trim());
+           
             
+            LoadDataToGridView();
+            lbRecordsCount.Text = $"# Records: {dgvViewPeople.Rows.Count.ToString()}";
 
         }
         private void inputControl_ValueChanged(object sender , EventArgs e)

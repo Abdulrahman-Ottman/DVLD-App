@@ -181,7 +181,7 @@ namespace DVLD_ViewTier.People
             }
         }
 
-        private void LoadCourtiers()
+        private void LoadCountries()
         {
             Dictionary<string , string> countries = CountryController.GetAllCountries();
             cbCountry.DataSource = new BindingSource(countries, null);
@@ -191,7 +191,7 @@ namespace DVLD_ViewTier.People
 
         private void AddPerson_Load(object sender, EventArgs e)
         {
-            LoadCourtiers();
+            LoadCountries();
             cbCountry.SelectedValue = nationalityCountryID;
             dtpDateOfBirth.MaxDate = DateTime.Today.AddYears(-18);
         }
