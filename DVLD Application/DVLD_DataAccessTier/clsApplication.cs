@@ -27,28 +27,36 @@ FROM                     Applications INNER JOIN
             string checkLicenseExistQuery = @"SELECT   Count(*)
 FROM            Applications INNER JOIN
                          Licenses ON Applications.ApplicationID = Licenses.ApplicationID INNER JOIN
-                         People ON Applications.ApplicantPersonID = People.PersonID Where PersonID = @personID";
+                         People ON Applications.ApplicantPersonID = People.PersonID Where PersonID = @personID and LicenseClass = @licenseClassID";
             SqlCommand command1 = new SqlCommand(checkLicenseExistQuery,clsSettings.connection);
             command1.Parameters.AddWithValue("@personID", data["PersonID"]);
-            string query = @"SELECT  Applications.*, LocalDrivingLicenseApplications.LicenseClassID
+            command1.Parameters.AddWithValue("@licenseClassID", data["LicenseClassID"]);
+
+
+            string GetAllLocalDrivingLicenseApplications = @"SELECT  Applications.*, LocalDrivingLicenseApplications.LicenseClassID
                             FROM Applications INNER JOIN LocalDrivingLicenseApplications
                             ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID
                             WHERE ApplicantPersonID = @PersonID AND Applications.ApplicationTypeID = 1";
-            SqlCommand command = new SqlCommand(query, clsSettings.connection);
+            SqlCommand command = new SqlCommand(GetAllLocalDrivingLicenseApplications, clsSettings.connection);
             command.Parameters.AddWithValue("@PersonID", data["PersonID"]);
             try
             {
                 clsSettings.connection.Open();
-                int numOfResults = (int)command1.ExecuteScalar();
                 SqlDataReader reader = command.ExecuteReader();
+
+                int numOfResults = (int)command1.ExecuteScalar();
+                if (numOfResults > 0) return id;
+
                 while (reader.Read())
                 {
-                    if (numOfResults>0&& reader["LicenseClassID"].ToString() == data["LicenseClassID"] && reader["ApplicationStatus"].ToString() != "2")
+
+                    if (reader["LicenseClassID"].ToString() == data["LicenseClassID"] && (int)reader["ApplicationStatus"] != 2)
                     {
                         return id;
                     }
                 }
                 reader.Close();
+                clsSettings.connection.Close();
 
                 string addingQuery = @"INSERT INTO Applications
                                                (ApplicantPersonID
@@ -75,8 +83,9 @@ FROM            Applications INNER JOIN
                 command2.Parameters.AddWithValue("@LastStatusDate", data["ApplicationDate"]);
                 command2.Parameters.AddWithValue("@PaidFees", clsHelpers.GetApplicationTypeFeesByID(1));
                 command2.Parameters.AddWithValue("@CreatedByUserID", data["UserID"]);
-
+                clsSettings.connection.Open();
                 var result = command2.ExecuteScalar();
+                clsSettings.connection.Close();
                 id = Convert.ToInt32(result); 
                 string addingToLocalTableQuery = @"INSERT INTO LocalDrivingLicenseApplications
                                                (ApplicationID
@@ -88,7 +97,7 @@ FROM            Applications INNER JOIN
                 SqlCommand command3 = new SqlCommand(addingToLocalTableQuery, clsSettings.connection);
                 command3.Parameters.AddWithValue("@ApplicationID", id);
                 command3.Parameters.AddWithValue("@LicenseClassID", data["LicenseClassID"]);
-
+                clsSettings.connection.Open();
                 command3.ExecuteScalar();
             }
             catch (Exception ex)

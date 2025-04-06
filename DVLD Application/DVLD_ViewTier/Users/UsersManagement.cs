@@ -17,7 +17,7 @@ namespace DVLD_ViewTier.Users
    
     public partial class UsersManagement : Form
     {
-        private DataTable Users = UserController.GetAllUsers();
+        private static DataTable Users = UserController.GetAllUsers();
 
         static Control currentSelectedFilter = null;
 
