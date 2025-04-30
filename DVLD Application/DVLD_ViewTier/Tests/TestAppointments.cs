@@ -18,7 +18,6 @@ namespace DVLD_ViewTier.Tests
             this.TestTypesID = TestTypeID;
             InitializeComponent();
             ApplicationID = applicationID;
-            appointments = ApplicationController.GetTestAppointments(TestTypeID.ToString(),ApplicationID.ToString());
         }
         private void reFetchData()
         {
@@ -28,6 +27,9 @@ namespace DVLD_ViewTier.Tests
 
         private void LoadDataToGridView()
         {
+            //calling the fetch function in the load event is the ideal approach 
+            //becaus all the controls and form has been fully initialized
+            appointments = ApplicationController.GetTestAppointments(TestTypesID.ToString(), ApplicationID.ToString());
             dgvTestAppointments.DataSource = appointments;
         }
         private void TestAppointments_Load(object sender, EventArgs e)

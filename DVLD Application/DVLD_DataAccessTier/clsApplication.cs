@@ -50,7 +50,7 @@ FROM            Applications INNER JOIN
                 while (reader.Read())
                 {
 
-                    if (reader["LicenseClassID"].ToString() == data["LicenseClassID"] && (int)reader["ApplicationStatus"] != 2)
+                    if (reader["LicenseClassID"].ToString() == data["LicenseClassID"] && reader["ApplicationStatus"].ToString() != "2")
                     {
                         return id;
                     }
@@ -203,7 +203,7 @@ FROM            InternationalLicenses ";
             command.Parameters.AddWithValue(parameterName, value);
             return clsHelpers.LocalApplicationsCommandExecuter(command);
         }
-        public static Dictionary<int , bool> getApplicationPassedTests(string id)
+        public static Dictionary<int , bool> getApplicationPassedTests(string ApplicationID)
         {
             Dictionary<int,bool> passedTests = new Dictionary<int,bool>();
             string query = @"SELECT        LocalDrivingLicenseApplications.ApplicationID, TestAppointments.TestTypeID, TestAppointments.TestAppointmentID, Tests.TestResult, LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID
@@ -215,7 +215,7 @@ FROM            InternationalLicenses ";
                          Tests ON TestAppointments.TestAppointmentID = Tests.TestAppointmentID
                     WHERE ApplicationID=@id";
             SqlCommand command = new SqlCommand(query,clsSettings.connection);
-            command.Parameters.AddWithValue ("@id", id);
+            command.Parameters.AddWithValue ("@id", ApplicationID);
             try
             {
                 clsSettings.connection.Open();
@@ -293,19 +293,19 @@ FROM            InternationalLicenses ";
         }
         public static bool saveTestAppointment(int testTypeID,DateTime date,int applicationID , float paidFees)
         {
-            string query1 = @"SELECT        TestAppointments.AppointmentDate, TestAppointments.TestTypeID, TestAppointments.IsLocked, LocalDrivingLicenseApplications.ApplicationID
+            string CheckForActiveTestWithSameDateOrType = @"SELECT        TestAppointments.AppointmentDate, TestAppointments.TestTypeID, TestAppointments.IsLocked, LocalDrivingLicenseApplications.ApplicationID
                 FROM 
                     LocalDrivingLicenseApplications
                 INNER JOIN
                          TestAppointments ON LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID = TestAppointments.LocalDrivingLicenseApplicationID
                 Where ApplicationID = @applicationID";
-            //query2 for checking if there passed test from the same type 
-            string query2 = @"SELECT   Count(*)   
+
+            string CheckForPassedTests = @"SELECT   Count(*)   
                         FROM            LocalDrivingLicenseApplications INNER JOIN
                          TestAppointments ON LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID = TestAppointments.LocalDrivingLicenseApplicationID INNER JOIN
                          Tests ON TestAppointments.TestAppointmentID = Tests.TestAppointmentID Where ApplicationID = @ApplicationID
 						 and TestTypeID = @TestTypeID and TestResult = 1";
-            using(SqlCommand command1 = new SqlCommand(query1, clsSettings.connection))
+            using(SqlCommand command1 = new SqlCommand(CheckForActiveTestWithSameDateOrType, clsSettings.connection))
             {
                 command1.Parameters.AddWithValue("@applicationID",applicationID);
                 try
@@ -330,7 +330,7 @@ FROM            InternationalLicenses ";
                     clsSettings.connection.Close();
                 }
             }
-            using (SqlCommand command2 = new SqlCommand(query2, clsSettings.connection))
+            using (SqlCommand command2 = new SqlCommand(CheckForPassedTests, clsSettings.connection))
             {
                 command2.Parameters.AddWithValue("@TestTypeID",testTypeID);
                 command2.Parameters.AddWithValue("@ApplicationID",applicationID);
@@ -354,13 +354,13 @@ FROM            InternationalLicenses ";
 
 
 
-                string query = @"INSERT INTO TestAppointments (TestTypeID,LocalDrivingLicenseApplicationID,AppointmentDate,PaidFees,CreatedByUserID,IsLocked)
+                string InsertQuery = @"INSERT INTO TestAppointments (TestTypeID,LocalDrivingLicenseApplicationID,AppointmentDate,PaidFees,CreatedByUserID,IsLocked)
                             Values
                              (@TestTypeID , @localLicenseApplicationID,@AppointmentDate,@PaidFees,@CreatedBy,0)";
             int LDL_ID = clsHelpers.getLocalApplicationIdByApplicationID(applicationID);
             if (LDL_ID > -1)
             {
-                SqlCommand command = new SqlCommand(query, clsSettings.connection);
+                SqlCommand command = new SqlCommand(InsertQuery, clsSettings.connection);
                 command.Parameters.AddWithValue("@TestTypeID", testTypeID);
                 command.Parameters.AddWithValue("@localLicenseApplicationID", LDL_ID);
                 command.Parameters.AddWithValue("@AppointmentDate", date);
